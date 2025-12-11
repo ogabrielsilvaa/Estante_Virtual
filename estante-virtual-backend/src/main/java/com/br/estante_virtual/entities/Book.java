@@ -13,33 +13,70 @@ public class Book implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Identificador único do livro.
+     * Gerado automaticamente pelo banco de dados (Auto Increment).
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     private Integer id;
 
-    @Column(name = "book_title")
+    /**
+     * Título do livro.
+     * Campo obrigatório.
+     */
+    @Column(name = "book_title", nullable = false)
     private String title;
 
-    @Column(name = "book_author")
+    /**
+     * Autor principal da obra.
+     * Campo obrigatório.
+     */
+    @Column(name = "book_author", nullable = false)
     private String author;
 
-    @Column(name = "book_isbn", unique = true)
+    /**
+     * Código ISBN (International Standard Book Number).
+     * Campo obrigatório e único no sistema.
+     */
+    @Column(name = "book_isbn", unique = true, nullable = false)
     private String isbn;
 
-    @Column(name = "book_cover_url")
+    /**
+     * URL da imagem da capa do livro.
+     * Campo obrigatório.
+     */
+    @Column(name = "book_cover_url", nullable = false)
     private String coverUrl;
 
+    /**
+     * Sinopse ou resumo detalhado do livro.
+     * Mapeado como TEXT/CLOB no banco para suportar grandes volumes de texto.
+     * Campo opcional.
+     */
     @Column(name = "book_synopsis", columnDefinition = "TEXT")
     private String synopsis;
 
-    @Column(name = "book_page_count")
+    /**
+     * Número total de páginas.
+     * Campo obrigatório.
+     */
+    @Column(name = "book_page_count", nullable = false)
     private Integer pageCount;
 
+    /**
+     * Editora responsável pela publicação.
+     * Campo opcional.
+     */
     @Column(name = "book_publisher")
     private String publisher;
 
-    @Column(name = "book_publication_year")
+    /**
+     * Ano de publicação da edição.
+     * Campo obrigatório.
+     */
+    @Column(name = "book_publication_year", nullable = false)
     private Integer publicationYear;
 
 
@@ -57,6 +94,7 @@ public class Book implements Serializable {
         this.publisher = publisher;
         this.publicationYear = publicationYear;
     }
+
 
     public Integer getId() {
         return id;
