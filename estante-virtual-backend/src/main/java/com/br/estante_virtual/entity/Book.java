@@ -1,4 +1,4 @@
-package com.br.estante_virtual.entities;
+package com.br.estante_virtual.entity;
 
 import jakarta.persistence.*;
 
