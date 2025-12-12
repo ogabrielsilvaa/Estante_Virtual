@@ -1,50 +1,40 @@
-package com.br.estante_virtual.dto.request;
+package com.br.estante_virtual.dto.response;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.hibernate.validator.constraints.URL;
+import com.br.estante_virtual.entity.Book;
 
-public class BookDTORequest {
+public class BookDTOResponse {
 
-    @NotBlank(message = "Não é possível cadastrar um livro sem inserir um título.")
+    private Integer id;
     private String title;
-
-    @NotBlank(message = "O autor do livro é obrigatório.")
     private String author;
-
-    @NotBlank(message = "O ISBN é obrigatório.")
     private String isbn;
-
-    @NotBlank(message = "A URL da capa é obrigatória.")
-    @URL(message = "A URL da capa informada não é válida.")
     private String coverUrl;
-
     private String synopsis;
-
-    @NotNull(message = "O número de páginas é obrigatório.")
-    @Positive(message = "O número de páginas deve ser maior que zero.")
     private Integer pageCount;
-
     private String publisher;
-
-    @NotNull(message = "O ano de publicação é obrigatório.")
-    @Min(value = 1000, message = "Insira um ano válido.")
     private Integer publicationYear;
 
-    public BookDTORequest() {
+    public BookDTOResponse() {
     }
 
-    public BookDTORequest(String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear) {
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
-        this.coverUrl = coverUrl;
-        this.synopsis = synopsis;
-        this.pageCount = pageCount;
-        this.publisher = publisher;
-        this.publicationYear = publicationYear;
+    public BookDTOResponse(Book bookEntity) {
+        this.id = bookEntity.getId();
+        this.title = bookEntity.getTitle();
+        this.author = bookEntity.getAuthor();
+        this.isbn = bookEntity.getIsbn();
+        this.coverUrl = bookEntity.getCoverUrl();
+        this.synopsis = bookEntity.getSynopsis();
+        this.pageCount = bookEntity.getPageCount();
+        this.publisher = bookEntity.getPublisher();
+        this.publicationYear = bookEntity.getPublicationYear();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
