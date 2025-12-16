@@ -1,7 +1,7 @@
 package com.br.estante_virtual.entity;
 
 import com.br.estante_virtual.entity.primaryKeys.UserBookId;
-import com.br.estante_virtual.enums.BookStatus;
+import com.br.estante_virtual.enums.BookReadingStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class UserBook implements Serializable {
     private Book book;
 
     @Column(name = "user_book_status")
-    private BookStatus status;
+    private BookReadingStatus status;
 
     @Column(name = "user_book_pages_read")
     private Integer pagesRead = 0;
@@ -50,7 +50,7 @@ public class UserBook implements Serializable {
         this.id = new UserBookId(user.getId(), book.getId());
         this.pagesRead = 0;
         this.favorite = false;
-        this.status = BookStatus.QUERO_LER; // Ou outro status padrão
+        this.status = BookReadingStatus.QUERO_LER; // Ou outro status padrão
     }
 
     public UserBookId getId() {
@@ -77,11 +77,11 @@ public class UserBook implements Serializable {
         this.book = book;
     }
 
-    public BookStatus getStatus() {
+    public BookReadingStatus getStatus() {
         return status;
     }
 
-    public void setStatus(BookStatus status) {
+    public void setStatus(BookReadingStatus status) {
         this.status = status;
     }
 

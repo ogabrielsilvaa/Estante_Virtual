@@ -5,11 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookStatus {
-    QUERO_LER(0, "Quero Ler"),
-    LENDO(1, "Lendo"),
-    LIDO(2, "Lido"),
-    PENDENTE(3, "Pendente"),
-    ABANDONEI(4, "Abandonei");
+    ATIVO(1, "Ativo"),
+    INATIVO(0, "Inativo");
 
     private final int id;
     private final String descricao;
@@ -19,25 +16,14 @@ public enum BookStatus {
         this.descricao = descricao;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public String getDescricao() { return descricao; }
 
-    public String getDescricao() {
-        return descricao;
-    }
-
-    /**
-     * @JsonCreator: Ensina o Jackson a lidar com o número que vem do Front-end.
-     * Quando chegar {"status": 1}, ele chama este método.
-     */
     @JsonCreator
     public static BookStatus fromId(int value) {
         for (BookStatus status : BookStatus.values()) {
-            if (status.id == value) {
-                return status;
-            }
+            if (status.id == value) return status;
         }
-        throw new IllegalArgumentException("Status inválido: " + value);
+        throw new IllegalArgumentException("Status do livro inválido: " + value);
     }
 }

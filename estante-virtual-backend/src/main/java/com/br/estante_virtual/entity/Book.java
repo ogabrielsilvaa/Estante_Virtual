@@ -1,5 +1,6 @@
 package com.br.estante_virtual.entity;
 
+import com.br.estante_virtual.enums.BookStatus;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -79,11 +80,17 @@ public class Book implements Serializable {
     @Column(name = "book_publication_year", nullable = false)
     private Integer publicationYear;
 
+    /**
+     * Campo de status para o livro.
+     */
+    @Column(name = "book_status", nullable = false)
+    private BookStatus status = BookStatus.ATIVO;
+
 
     public Book() {
     }
 
-    public Book(Integer id, String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear) {
+    public Book(Integer id, String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear, BookStatus status) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -93,6 +100,7 @@ public class Book implements Serializable {
         this.pageCount = pageCount;
         this.publisher = publisher;
         this.publicationYear = publicationYear;
+        this.status = status;
     }
 
 
@@ -166,6 +174,14 @@ public class Book implements Serializable {
 
     public void setPublicationYear(Integer publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public BookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
     }
 
     @Override

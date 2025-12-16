@@ -1,14 +1,14 @@
 package com.br.estante_virtual.converter;
 
-import com.br.estante_virtual.enums.BookStatus;
+import com.br.estante_virtual.enums.BookReadingStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class BookStatusConverter implements AttributeConverter<BookStatus, Integer> {
+public class BookStatusConverter implements AttributeConverter<BookReadingStatus, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(BookStatus status) {
+    public Integer convertToDatabaseColumn(BookReadingStatus status) {
         if (status == null) {
             return null;
         }
@@ -16,10 +16,10 @@ public class BookStatusConverter implements AttributeConverter<BookStatus, Integ
     }
 
     @Override
-    public BookStatus convertToEntityAttribute(Integer dbData) {
+    public BookReadingStatus convertToEntityAttribute(Integer dbData) {
         if (dbData == null) {
             return null;
         }
-        return BookStatus.fromId(dbData);
+        return BookReadingStatus.fromId(dbData);
     }
 }

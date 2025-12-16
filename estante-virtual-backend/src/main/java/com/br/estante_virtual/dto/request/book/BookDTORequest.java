@@ -1,4 +1,4 @@
-package com.br.estante_virtual.dto.request;
+package com.br.estante_virtual.dto.request.book;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
