@@ -1,8 +1,7 @@
-package com.br.estante_virtual.dto.response;
+package com.br.estante_virtual.dto.response.user;
 
+import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.enums.UserStatus;
-import jakarta.persistence.Column;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -14,18 +13,24 @@ public class UserDTOResponse {
     private Integer id;
     private String name;
     private String email;
-    private String password;
     private LocalDateTime createdAt;
     private UserStatus status;
 
     public UserDTOResponse() {
     }
 
-    public UserDTOResponse(Integer id, String name, String email, String password, LocalDateTime createdAt, UserStatus status) {
+    public UserDTOResponse(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.createdAt = user.getCreatedAt();
+        this.status = user.getStatus();
+    }
+
+    public UserDTOResponse(Integer id, String name, String email, LocalDateTime createdAt, UserStatus status) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.createdAt = createdAt;
         this.status = status;
     }
@@ -52,14 +57,6 @@ public class UserDTOResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDateTime getCreatedAt() {
