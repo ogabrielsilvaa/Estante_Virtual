@@ -43,6 +43,9 @@ public class SecurityConfig {
 
     private static final String[] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
             "/api/user/buscarMeuPerfil",
+            "/api/user/deletarMinhaConta",
+
+            "/api/userBook/**"
     };
 
     @Bean
