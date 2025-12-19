@@ -46,60 +46,60 @@ public class BookController {
 
     /**
      * Busca um livro específico pelo seu ID, garantindo que pertença ao usuário autenticado.
-     * @param livroId O ID do livro a ser buscado.
+     * @param bookId O ID do livro a ser buscado.
      * @return o medicamento encontrado.
      */
-    @GetMapping("/listarLivroPorId/{livroId}")
+    @GetMapping("/listarLivroPorId/{bookId}")
     @Operation(summary = "Listar o livro pelo ID dele.", description = "Endpoint para listar um Livro específico do usuário logado.")
     public ResponseEntity<BookDTOResponse> listarLivroPorId(
-            @PathVariable("livroId") Integer livroId
+            @PathVariable("bookId") Integer bookId
     ) {
-        BookDTOResponse bookDTOResponse = bookService.listarLivroPorId(livroId);
-        return ResponseEntity.ok(bookDTOResponse);
+        BookDTOResponse dtoResponse = bookService.listarLivroPorId(bookId);
+        return ResponseEntity.ok(dtoResponse);
     }
 
     /**
      * Cria um novo livro para o usuário autenticado.
-     * @param bookDTORequest O DTO contendo os dados do livro a ser criado.
+     * @param dtoRequest O DTO contendo os dados do livro a ser criado.
      * @return O livro recém-criado.
      */
     @PostMapping("/cadastrar")
     public ResponseEntity<BookDTOResponse> cadastrarBook(
-            @Valid @RequestBody BookDTORequest bookDTORequest
+            @Valid @RequestBody BookDTORequest dtoRequest
             ) {
 
-        BookDTOResponse bookDTOResponse = bookService.cadastrarLivro(bookDTORequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookDTOResponse);
+        BookDTOResponse dtoResponse = bookService.cadastrarLivro(dtoRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
     }
 
     /**
      * Atualiza um livro existente do usuário autenticado.
-     * @param livroId O ID do livro a ser atualizado.
-     * @param bookAtualizarDTORequest O DTO contendo os dados para atualização (apenas os campos que devem ser alterados).
+     * @param bookId O ID do livro a ser atualizado.
+     * @param atualizarDTORequest O DTO contendo os dados para atualização (apenas os campos que devem ser alterados).
      * @return O livro autalizado.
      */
-    @PutMapping("/atualizar/{livroId}")
+    @PatchMapping("/atualizar/{livroId}")
     @Operation(summary = "Atualizar todos os dados do Livro.", description = "Endpoint para atualizar o registro do Livro existente do usuário logado.")
     public ResponseEntity<BookDTOResponse> atualizarLivroPorId(
-            @PathVariable("livroId") Integer livroId,
-            @RequestBody @Valid BookAtualizarDTORequest bookAtualizarDTORequest
+            @PathVariable("livroId") Integer bookId,
+            @RequestBody @Valid BookAtualizarDTORequest atualizarDTORequest
             ) {
 
-        BookDTOResponse livroAtualizado = bookService.atualizarLivroPorId(livroId, bookAtualizarDTORequest);
+        BookDTOResponse livroAtualizado = bookService.atualizarLivroPorId(bookId, atualizarDTORequest);
         return ResponseEntity.ok(livroAtualizado);
     }
 
     /**
      * Realiza a exclusão lógica de um livro do usuário autenticado.
-     * @param livroId O ID do livro a ser desativado.
+     * @param bookId O ID do livro a ser desativado.
      * @return Resposta sem conteúdo.
      */
-    @DeleteMapping("/deletar/{livroId}")
+    @DeleteMapping("/deletar/{bookId}")
     @Operation(summary = "Deletar todos os dados do Livro.", description = "Endpoint para deletar o registro do Livro do usuário logado.")
     public ResponseEntity<Void> deletarLivro(
-            @PathVariable("livroId") Integer livroId
+            @PathVariable("bookId") Integer bookId
     ) {
-        bookService.deletarLogico(livroId);
+        bookService.deletarLogico(bookId);
         return ResponseEntity.noContent().build();
     }
 

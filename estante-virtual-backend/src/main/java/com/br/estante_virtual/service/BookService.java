@@ -52,100 +52,100 @@ public class BookService {
 
     /**
      * Busca um livro pelo seu ID.
-     * @param livroId O ID do livro a ser buscado.
+     * @param bookId O ID do livro a ser buscado.
      * @return O {@link BookDTOResponse} correspondente ao ID.
      */
-    public BookDTOResponse listarLivroPorId(Integer livroId) {
-        Book livroVerificado = validarLivro(livroId);
-        return new BookDTOResponse(livroVerificado);
+    public BookDTOResponse listarLivroPorId(Integer bookId) {
+        Book verifiedBook = validarLivro(bookId);
+        return new BookDTOResponse(verifiedBook);
     }
 
     @Transactional
-    public BookDTOResponse cadastrarLivro(BookDTORequest bookDTORequest) {
-        Book novoLivro = new Book();
+    public BookDTOResponse cadastrarLivro(BookDTORequest dtoRequest) {
+        Book newBook = new Book();
 
-        novoLivro.setTitle(bookDTORequest.getTitle());
-        novoLivro.setAuthor(bookDTORequest.getAuthor());
-        novoLivro.setIsbn(bookDTORequest.getIsbn());
-        novoLivro.setCoverUrl(bookDTORequest.getCoverUrl());
-        novoLivro.setSynopsis(bookDTORequest.getSynopsis());
-        novoLivro.setPageCount(bookDTORequest.getPageCount());
-        novoLivro.setPublisher(bookDTORequest.getPublisher());
-        novoLivro.setPublicationYear(bookDTORequest.getPublicationYear());
+        newBook.setTitle(dtoRequest.getTitle());
+        newBook.setAuthor(dtoRequest.getAuthor());
+        newBook.setIsbn(dtoRequest.getIsbn());
+        newBook.setCoverUrl(dtoRequest.getCoverUrl());
+        newBook.setSynopsis(dtoRequest.getSynopsis());
+        newBook.setPageCount(dtoRequest.getPageCount());
+        newBook.setPublisher(dtoRequest.getPublisher());
+        newBook.setPublicationYear(dtoRequest.getPublicationYear());
 
-        Book livroSalvo = bookRepository.save(novoLivro);
+        Book savedBook = bookRepository.save(newBook);
 
-        return new BookDTOResponse(livroSalvo);
+        return new BookDTOResponse(savedBook);
     }
 
     /**
      * Atualiza os dados de um livro existente.
-     * @param livroId O ID do livro a ser atualizado.
-     * @param livroAtualizado O DTO com os novos dados.
+     * @param bookId O ID do livro a ser atualizado.
+     * @param atualizarDTORequest O DTO com os novos dados.
      * @return O {@link BookAtualizarDTORequest} da entidade atualizada.
      */
     @Transactional
-    public BookDTOResponse atualizarLivroPorId(Integer livroId, BookAtualizarDTORequest livroAtualizado) {
-        Book livroExistente = validarLivro(livroId);
+    public BookDTOResponse atualizarLivroPorId(Integer bookId, BookAtualizarDTORequest atualizarDTORequest) {
+        Book existingBook = validarLivro(bookId);
 
-        if (livroAtualizado.getTitle() != null) {
-            livroExistente.setTitle(livroAtualizado.getTitle());
+        if (atualizarDTORequest.getTitle() != null) {
+            existingBook.setTitle(atualizarDTORequest.getTitle());
         }
 
-        if (livroAtualizado.getAuthor() != null) {
-            livroExistente.setAuthor(livroAtualizado.getAuthor());
+        if (atualizarDTORequest.getAuthor() != null) {
+            existingBook.setAuthor(atualizarDTORequest.getAuthor());
         }
 
-        if (livroAtualizado.getIsbn() != null) {
-            livroExistente.setIsbn(livroAtualizado.getIsbn());
+        if (atualizarDTORequest.getIsbn() != null) {
+            existingBook.setIsbn(atualizarDTORequest.getIsbn());
         }
 
-        if (livroAtualizado.getCoverUrl() != null) {
-            livroExistente.setCoverUrl(livroAtualizado.getCoverUrl());
+        if (atualizarDTORequest.getCoverUrl() != null) {
+            existingBook.setCoverUrl(atualizarDTORequest.getCoverUrl());
         }
 
-        if (livroAtualizado.getSynopsis() != null) {
-            livroExistente.setSynopsis(livroAtualizado.getSynopsis());
+        if (atualizarDTORequest.getSynopsis() != null) {
+            existingBook.setSynopsis(atualizarDTORequest.getSynopsis());
         }
 
-        if (livroAtualizado.getPageCount() != null) {
-            livroExistente.setPageCount(livroAtualizado.getPageCount());
+        if (atualizarDTORequest.getPageCount() != null) {
+            existingBook.setPageCount(atualizarDTORequest.getPageCount());
         }
 
-        if (livroAtualizado.getPublisher() != null) {
-            livroExistente.setPublisher(livroAtualizado.getPublisher());
+        if (atualizarDTORequest.getPublisher() != null) {
+            existingBook.setPublisher(atualizarDTORequest.getPublisher());
         }
 
-        if (livroAtualizado.getPublicationYear() != null) {
-            livroExistente.setPublicationYear(livroAtualizado.getPublicationYear());
+        if (atualizarDTORequest.getPublicationYear() != null) {
+            existingBook.setPublicationYear(atualizarDTORequest.getPublicationYear());
         }
 
-        return new BookDTOResponse(livroExistente);
+        return new BookDTOResponse(existingBook);
     }
 
     /**
      * Realiza a exclusão lógica de um livro.
-     * @param livroId O ID do livro a ser desativado.
+     * @param bookId O ID do livro a ser desativado.
      */
     @Transactional
-    public void deletarLogico(Integer livroId) {
-        validarLivro(livroId);
-        bookRepository.apagarLivroLogico(livroId, BookStatus.INATIVO);
+    public void deletarLogico(Integer bookId) {
+        validarLivro(bookId);
+        bookRepository.apagarLivroLogico(bookId, BookStatus.INATIVO);
     }
 
     /**
      * Valida a existência de um tratamento e sua posse pelo usuário.
-     * @param livroId o ID do livro a ser validado.
+     * @param bookId o ID do livro a ser validado.
      * @return A entidade {@link Book} encontrada.
      * @throws EntityNotFoundException se o livro não for encontrado.
      */
-    private Book validarLivro(Integer livroId) {
-        Book livro = bookRepository.listarLivroPorId(livroId);
+    private Book validarLivro(Integer bookId) {
+        Book book = bookRepository.listarLivroPorId(bookId);
 
-        if (livro == null) {
-            throw new EntityNotFoundException("Livro não encontrado com o ID: " + livroId);
+        if (book == null) {
+            throw new EntityNotFoundException("Livro não encontrado com o ID: " + bookId);
         }
 
-        return livro;
+        return book;
     }
 }

@@ -35,13 +35,13 @@ public class UserController {
      * Este endpoint recebe os dados de um novo usuário e os persiste no banco de dados.
      * </p>
      *
-     * @param userDTORequest DTO contendo os dados necessários para o cadastro do novo usuário.
+     * @param dtoRequest DTO contendo os dados necessários para o cadastro do novo usuário.
      * @return Resposta com status 201 Created.
      */
     @PostMapping("/cadastrar")
     @Operation(summary = "Cadastrar Usuário.", description = "Endpoint para cadastrar Usuários, com SecurityJWT.")
-    public ResponseEntity<Void> criarUsuario(@RequestBody UserDTORequest userDTORequest) {
-        userService.criarUsuario(userDTORequest);
+    public ResponseEntity<Void> criarUsuario(@RequestBody UserDTORequest dtoRequest) {
+        userService.criarUsuario(dtoRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -52,13 +52,14 @@ public class UserController {
      * o serviço de usuário gera e retorna um token de acesso.
      * </p>
      *
-     * @param userLoginDTORequest DTO contendo o email e a senha do usuário para autenticação.
+     * @param dtoRequest DTO contendo o email e a senha do usuário para autenticação.
      * @return O token JWT para ser usado nas próximas requisições.
      */
     @PostMapping("/login")
     @Operation(summary = "Login de Usuário.", description = "Endpoint para fazer o Login de 1 Usuário cadastrado no Banco.")
-    public ResponseEntity<RecoveryJwtTokenDTO> autenticarUsuarioSecurity(@RequestBody UserLoginDTORequest userLoginDTORequest) {
-        RecoveryJwtTokenDTO token = userService.autenticarUsuario(userLoginDTORequest);
+    public ResponseEntity<RecoveryJwtTokenDTO> autenticarUsuarioSecurity(@RequestBody UserLoginDTORequest dtoRequest) {
+        RecoveryJwtTokenDTO token = userService.autenticarUsuario(dtoRequest);
+
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
@@ -76,18 +77,19 @@ public class UserController {
 
     /**
      * Atualiza dados de um usuário existente (nome e telefone).
-     * @param atualizarDTORequest DTO contendo os dados a serem alterados.
+     * @param dtoRequest DTO contendo os dados a serem alterados.
      * @param userDetails Detalhes do usuário injetados pelo Spring Security.
      * @return O perfil do usuário com os dados atualizados.
      */
-    @PutMapping("/atualizar")
+    @PatchMapping("/atualizar")
     @Operation(summary = "Atualizar meu perfil.", description = "Endpoint para o usuário logado atualizar seus dados de perfil.")
     public ResponseEntity<UserDTOResponse> atualizarUsuarioPorId(
-            @RequestBody @Valid UserAtualizarDTORequest atualizarDTORequest,
+            @RequestBody @Valid UserAtualizarDTORequest dtoRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
         Integer userId = userDetails.getUserId();
-        UserDTOResponse userAtualizado = userService.autalizarMeuPerfil(userId, atualizarDTORequest);
+        UserDTOResponse userAtualizado = userService.autalizarMeuPerfil(userId, dtoRequest);
+
         return ResponseEntity.ok(userAtualizado);
     }
 
@@ -101,6 +103,7 @@ public class UserController {
     public ResponseEntity<Void> deletarUsuario(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Integer userId = userDetails.getUserId();
         userService.deletarMinhaConta(userId);
+
         return ResponseEntity.noContent().build();
     }
 

@@ -21,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -123,14 +122,14 @@ public class UserService {
      */
     @Transactional
     public UserDTOResponse autalizarMeuPerfil(Integer userId, UserAtualizarDTORequest atualizarDTORequest) {
-        User userExistente = validarUser(userId);
+        User existingUser = validarUser(userId);
 
         if (atualizarDTORequest.getName() != null) {
-            userExistente.setName(atualizarDTORequest.getName());
+            existingUser.setName(atualizarDTORequest.getName());
         }
 
-        User userAtualizado = userRepository.save(userExistente);
-        return new UserDTOResponse(userAtualizado);
+        User updatedUser = userRepository.save(existingUser);
+        return new UserDTOResponse(updatedUser);
     }
 
     /**

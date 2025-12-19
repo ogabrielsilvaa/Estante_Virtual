@@ -18,7 +18,7 @@ public class JwtTokenService {
     @Value("${api.security.token.secret}")
     private String SECRET_KEY;
 
-    private static final String ISSUER = "pizzurg-api";
+    private static final String ISSUER = "estante-virtual-api";
 
     public String generateToken(UserDetailsImpl user) {
         try {
