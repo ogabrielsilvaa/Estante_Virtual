@@ -1,9 +1,8 @@
 package com.br.estante_virtual.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookReadingStatus {
     QUERO_LER(0, "Quero Ler"),
     LENDO(1, "Lendo"),
@@ -19,6 +18,7 @@ public enum BookReadingStatus {
         this.descricao = descricao;
     }
 
+    @JsonValue
     public int getId() {
         return id;
     }
