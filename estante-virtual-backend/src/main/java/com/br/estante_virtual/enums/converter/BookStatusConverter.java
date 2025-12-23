@@ -1,4 +1,4 @@
-package com.br.estante_virtual.converter;
+package com.br.estante_virtual.enums.converter;
 
 import com.br.estante_virtual.enums.BookReadingStatus;
 import jakarta.persistence.AttributeConverter;
