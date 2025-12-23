@@ -45,7 +45,8 @@ public class SecurityConfig {
             "/api/user/buscarMeuPerfil",
             "/api/user/deletarMinhaConta",
 
-            "/api/userBook/**"
+            "/api/userBook/**",
+            "/api/reviews/**"
     };
 
     @Bean
