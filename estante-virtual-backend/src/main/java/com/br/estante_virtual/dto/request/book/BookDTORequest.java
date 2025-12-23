@@ -1,5 +1,7 @@
 package com.br.estante_virtual.dto.request.book;
 
+import com.br.estante_virtual.enums.BookReadingStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,10 +35,13 @@ public class BookDTORequest {
     @Min(value = 1000, message = "Insira um ano válido.")
     private Integer publicationYear;
 
+    @Schema(type = "integer", example = "1", description = "1-LENDO, 0-QUERO_LER")
+    private BookReadingStatus status;
+
     public BookDTORequest() {
     }
 
-    public BookDTORequest(String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear) {
+    public BookDTORequest(String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear, BookReadingStatus status) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
@@ -45,6 +50,7 @@ public class BookDTORequest {
         this.pageCount = pageCount;
         this.publisher = publisher;
         this.publicationYear = publicationYear;
+        this.status = status;
     }
 
     public String getTitle() {
@@ -109,5 +115,13 @@ public class BookDTORequest {
 
     public void setPublicationYear(Integer publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public BookReadingStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookReadingStatus status) {
+        this.status = status;
     }
 }

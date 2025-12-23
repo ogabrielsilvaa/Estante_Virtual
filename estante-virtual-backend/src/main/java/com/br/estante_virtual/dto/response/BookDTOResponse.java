@@ -1,6 +1,7 @@
 package com.br.estante_virtual.dto.response;
 
 import com.br.estante_virtual.entity.Book;
+import com.br.estante_virtual.enums.BookReadingStatus;
 
 public class BookDTOResponse {
 
@@ -13,6 +14,7 @@ public class BookDTOResponse {
     private Integer pageCount;
     private String publisher;
     private Integer publicationYear;
+    private BookReadingStatus status;
 
     public BookDTOResponse() {
     }
@@ -27,6 +29,7 @@ public class BookDTOResponse {
         this.pageCount = bookEntity.getPageCount();
         this.publisher = bookEntity.getPublisher();
         this.publicationYear = bookEntity.getPublicationYear();
+        this.status = bookEntity.getStatus();
     }
 
     public Integer getId() {
@@ -99,5 +102,13 @@ public class BookDTOResponse {
 
     public void setPublicationYear(Integer publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public BookReadingStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookReadingStatus status) {
+        this.status = status;
     }
 }

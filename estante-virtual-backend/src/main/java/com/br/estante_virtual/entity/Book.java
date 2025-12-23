@@ -1,5 +1,6 @@
 package com.br.estante_virtual.entity;
 
+import com.br.estante_virtual.enums.BookReadingStatus;
 import com.br.estante_virtual.enums.BookStatus;
 import jakarta.persistence.*;
 
@@ -84,13 +85,13 @@ public class Book implements Serializable {
      * Campo de status para o livro.
      */
     @Column(name = "book_status", nullable = false)
-    private BookStatus status = BookStatus.ATIVO;
+    private BookReadingStatus status;
 
 
     public Book() {
     }
 
-    public Book(Integer id, String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear, BookStatus status) {
+    public Book(Integer id, String title, String author, String isbn, String coverUrl, String synopsis, Integer pageCount, String publisher, Integer publicationYear, BookReadingStatus status) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -176,11 +177,11 @@ public class Book implements Serializable {
         this.publicationYear = publicationYear;
     }
 
-    public BookStatus getStatus() {
+    public BookReadingStatus getStatus() {
         return status;
     }
 
-    public void setStatus(BookStatus status) {
+    public void setStatus(BookReadingStatus status) {
         this.status = status;
     }
 

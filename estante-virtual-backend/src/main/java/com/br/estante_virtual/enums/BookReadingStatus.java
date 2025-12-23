@@ -18,11 +18,11 @@ public enum BookReadingStatus {
         this.descricao = descricao;
     }
 
-    @JsonValue
     public int getId() {
         return id;
     }
 
+    @JsonValue
     public String getDescricao() {
         return descricao;
     }
@@ -31,7 +31,7 @@ public enum BookReadingStatus {
      * @JsonCreator: Ensina o Jackson a lidar com o número que vem do Front-end.
      * Quando chegar {"status": 1}, ele chama este método.
      */
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static BookReadingStatus fromId(int value) {
         for (BookReadingStatus status : BookReadingStatus.values()) {
             if (status.id == value) {
