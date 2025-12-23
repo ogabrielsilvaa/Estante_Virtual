@@ -63,5 +63,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
      * @return
      */
     @Query("SELECT r FROM Review r WHERE r.id = :id AND r.userBook.user.id = :userId")
-    Optional<Review> findByIdAndUserId(Integer id, Integer userId);
+    Optional<Review> listarPorIdEUsuario(Integer id, Integer userId);
 }

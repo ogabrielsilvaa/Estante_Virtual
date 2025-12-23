@@ -1,7 +1,9 @@
 package com.br.estante_virtual.repository;
 
+import com.br.estante_virtual.dto.response.BookDTOResponse;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.enums.BookReadingStatus;
+import com.br.estante_virtual.enums.BookStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +63,7 @@ public interface UserBookRepository extends JpaRepository<UserBook, Integer> {
     @Modifying
     @Transactional
     @Query("UPDATE UserBook ub SET ub.status = :status WHERE ub.user.id = :userId AND ub.book.id = :bookId")
-    void deletarLogicamente(@Param("userId") Integer userId,
-                            @Param("bookId") Integer bookId,
-                            @Param("status") BookReadingStatus status);
+    void mudarStatusDoLivro(@Param("userId") Integer userId,
+                                       @Param("bookId") Integer bookId,
+                                       @Param("status") BookReadingStatus status);
 }

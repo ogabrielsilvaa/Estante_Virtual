@@ -85,10 +85,7 @@ public class ReviewService {
      * @throws IllegalArgumentException Se o usuário já avaliou este livro.
      */
     @Transactional
-    public ReviewDTOResponse cadastrarReview(
-            ReviewDTORequest dtoRequest,
-            Integer userId
-            ) {
+    public ReviewDTOResponse cadastrarReview(ReviewDTORequest dtoRequest, Integer userId) {
         //buscar o userBook, agora usando o método que busca pelo par de ids (User + Book)
         UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, dtoRequest.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException("Este livro não está na estante do usuário."));
@@ -172,11 +169,8 @@ public class ReviewService {
      * @return A entidade {@link Review} encontrada.
      * @throws EntityNotFoundException se a review não for encontrada.
      */
-    private Review validarReview(
-            Integer reviewId,
-            Integer userId
-            ) {
-        return reviewRepository.findByIdAndUserId(reviewId, userId)
+    private Review validarReview(Integer reviewId, Integer userId) {
+        return reviewRepository.listarPorIdEUsuario(reviewId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Review não encontrada ou acesso negado (ID: " + reviewId + ")"));
     }
 }

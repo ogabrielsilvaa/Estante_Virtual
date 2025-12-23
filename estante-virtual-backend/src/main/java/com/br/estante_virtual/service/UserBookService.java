@@ -6,7 +6,6 @@ import com.br.estante_virtual.dto.response.UserBookDTOResponse;
 import com.br.estante_virtual.entity.Book;
 import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.entity.UserBook;
-import com.br.estante_virtual.entity.primaryKeys.UserBookId;
 import com.br.estante_virtual.enums.BookReadingStatus;
 import com.br.estante_virtual.repository.BookRepository;
 import com.br.estante_virtual.repository.UserBookRepository;
@@ -146,7 +145,7 @@ public class UserBookService {
             throw new EntityNotFoundException("Livro não encontrado.");
         }
 
-        userBookRepository.deletarLogicamente(userId, bookId, BookReadingStatus.ABANDONEI);
+        userBookRepository.mudarStatusDoLivro(userId, bookId, BookReadingStatus.ABANDONEI);
     }
 
     public UserBookDTOResponse buscarLivroNaEstante(Integer userId, Integer bookId) {
