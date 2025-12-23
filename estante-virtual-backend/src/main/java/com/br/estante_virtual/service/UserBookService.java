@@ -7,6 +7,7 @@ import com.br.estante_virtual.entity.Book;
 import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.entity.primaryKeys.UserBookId;
+import com.br.estante_virtual.enums.BookReadingStatus;
 import com.br.estante_virtual.repository.BookRepository;
 import com.br.estante_virtual.repository.UserBookRepository;
 import com.br.estante_virtual.repository.UserRepository;
@@ -55,7 +56,7 @@ public class UserBookService {
             throw new EntityNotFoundException("Usuário não encontrado.");
         }
 
-        return userBookRepository.findAllByIdUserId(userId)
+        return userBookRepository.findByUserId(userId)
                 .stream()
                 .map(UserBookDTOResponse::new)
                 .toList();
@@ -68,9 +69,7 @@ public class UserBookService {
      */
     @Transactional
     public UserBookDTOResponse adicionarLivroNaEstante(Integer userId, UserBookDTORequest dtoRequest) {
-        UserBookId id = new UserBookId(userId, dtoRequest.getBookId());
-
-        if(userBookRepository.existsById(id)) {
+        if(userBookRepository.existsByUserIdAndBookId(userId, dtoRequest.getBookId())) {
             throw new RuntimeException("Este livro já está na sua estante.");
         }
 
@@ -81,7 +80,6 @@ public class UserBookService {
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado."));
 
         UserBook novoRegistro = new UserBook();
-        novoRegistro.setId(id);
         novoRegistro.setUser(user);
         novoRegistro.setBook(book);
 
@@ -110,9 +108,7 @@ public class UserBookService {
      */
     @Transactional
     public UserBookDTOResponse atualizarLeitura(Integer userId, Integer bookId, UserBookAtualizarDTORequest atualizarDTORequest) {
-        UserBookId id = new UserBookId(userId, bookId);
-
-        UserBook userBook = userBookRepository.findById(id)
+        UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, bookId)
                 .orElseThrow(() -> new RuntimeException("Registro não encontrado na estante."));
 
         if (atualizarDTORequest.getStatus() != null) {
@@ -146,19 +142,15 @@ public class UserBookService {
      */
     @Transactional
     public void removerLivroDaEstante(Integer userId, Integer bookId) {
-        UserBookId id = new UserBookId(userId, bookId);
-
-        if (!userBookRepository.existsById(id)) {
-            throw new RuntimeException("Livro não encontrado na estante para remoção.");
+        if (!userBookRepository.existsByUserIdAndBookId(userId, bookId)) {
+            throw new EntityNotFoundException("Livro não encontrado.");
         }
 
-        userBookRepository.deleteById(id);
+        userBookRepository.deletarLogicamente(userId, bookId, BookReadingStatus.ABANDONEI);
     }
 
     public UserBookDTOResponse buscarLivroNaEstante(Integer userId, Integer bookId) {
-        UserBookId id = new UserBookId(userId, bookId);
-
-        UserBook userBook = userBookRepository.findById(id)
+        UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, bookId)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado na estante deste usuário."));
 
         return new UserBookDTOResponse(userBook);

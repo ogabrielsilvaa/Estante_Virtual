@@ -1,6 +1,5 @@
 package com.br.estante_virtual.entity;
 
-import com.br.estante_virtual.entity.primaryKeys.UserBookId;
 import com.br.estante_virtual.enums.BookReadingStatus;
 import jakarta.persistence.*;
 
@@ -9,19 +8,22 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_book")
+@Table(name = "user_book",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "book_id"}) //garante que não duplica livro pra o mesmo user
+        })
 public class UserBook implements Serializable {
 
-    @EmbeddedId
-    private UserBookId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_book_id")
+    private Integer id;
 
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @MapsId("bookId")
     @JoinColumn(name = "book_id")
     private Book book;
 
@@ -47,17 +49,16 @@ public class UserBook implements Serializable {
     public UserBook(User user, Book book) {
         this.user = user;
         this.book = book;
-        this.id = new UserBookId(user.getId(), book.getId());
         this.pagesRead = 0;
         this.favorite = false;
         this.status = BookReadingStatus.QUERO_LER; // Ou outro status padrão
     }
 
-    public UserBookId getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UserBookId id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

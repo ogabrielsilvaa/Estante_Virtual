@@ -1,52 +1,67 @@
 package com.br.estante_virtual.repository;
 
 import com.br.estante_virtual.entity.UserBook;
-import com.br.estante_virtual.entity.primaryKeys.UserBookId;
 import com.br.estante_virtual.enums.BookReadingStatus;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repositório para gerenciar as operações de banco de dados para a entidade {@link UserBook}
  */
 @Repository
-public interface UserBookRepository extends JpaRepository<UserBook, UserBookId> {
+public interface UserBookRepository extends JpaRepository<UserBook, Integer> {
 
     /**
      * Busca toda a estante de livros do usuário informado.
-     *
-     * @param userId O ID do usuário dono da estante.
-     * @return Uma lista contendo todos os relacionamentos {@link UserBook} deste usuário.
      */
-    List<UserBook> findAllByIdUserId(Integer userId);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId")
+    List<UserBook> findByUserId(@Param("userId") Integer userId);
 
     /**
      * Busca a estante do usuário de forma paginada.
-     *
-     * @param userId O ID do usuário dono da estante.
-     * @param pageable Objeto contendo as informações de paginação (número da página, tamanho e ordenação).
-     * @return Uma {@link Page} contendo a fatia solicitada dos livros do usuário.
+     * O Spring aplica a paginação automaticamente na Query JPQL.
      */
-    Page<UserBook> findAllByIdUserId(Integer userId, Pageable pageable);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId")
+    Page<UserBook> findByUserId(@Param("userId") Integer userId, Pageable pageable);
 
     /**
      * Busca livros do usuário filtrando pelo status (ex: LENDO, LIDO).
-     *
-     * @param userId O ID do usuário.
-     * @param status O status de leitura desejado (enum {@link BookReadingStatus}).
-     * @return Uma lista de {@link UserBook} que correspondem ao usuário e ao status fornecido.
      */
-    List<UserBook> findAllByIdUserIdAndStatus(Integer userId, BookReadingStatus status);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.status = :status")
+    List<UserBook> findByUserIdAndStatus(@Param("userId") Integer userId,
+                                         @Param("status") BookReadingStatus status);
 
     /**
      * Verifica se este livro já existe na estante deste usuário.
-     *
-     * @param id A chave composta {@link UserBookId} contendo o ID do usuário e o ID do livro.
-     * @return {@code true} se o relacionamento já existir no banco de dados, caso contrário, {@code false}.
+     * Implementado contando se existe algum registro (> 0).
      */
-    boolean existsById(UserBookId id);
+    @Query("SELECT CASE WHEN COUNT(ub) > 0 THEN true ELSE false END FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id = :bookId")
+    boolean existsByUserIdAndBookId(@Param("userId") Integer userId,
+                                    @Param("bookId") Integer bookId);
+
+    /**
+     * Busca um registro específico pelo par Usuário + Livro.
+     */
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id = :bookId")
+    Optional<UserBook> findByUserIdAndBookId(@Param("userId") Integer userId,
+                                             @Param("bookId") Integer bookId);
+
+    /**
+     * Atualiza o status do livro na estante para realizar a exclusão lógica.
+     */
+    @Modifying
+    @Transactional
+    @Query("UPDATE UserBook ub SET ub.status = :status WHERE ub.user.id = :userId AND ub.book.id = :bookId")
+    void deletarLogicamente(@Param("userId") Integer userId,
+                            @Param("bookId") Integer bookId,
+                            @Param("status") BookReadingStatus status);
 }
