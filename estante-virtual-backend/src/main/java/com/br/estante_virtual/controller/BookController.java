@@ -3,12 +3,16 @@ package com.br.estante_virtual.controller;
 import com.br.estante_virtual.dto.request.book.BookAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.book.BookDTORequest;
 import com.br.estante_virtual.dto.response.BookDTOResponse;
+import com.br.estante_virtual.dto.response.UserBookDTOResponse;
+import com.br.estante_virtual.enums.BookReadingStatus;
+import com.br.estante_virtual.security.UserDetailsImpl;
 import com.br.estante_virtual.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +35,11 @@ public class BookController {
      * @return Uma lista de livros do usuário.
      */
     @GetMapping("/listarLivrosAtivos")
-    public ResponseEntity<List<BookDTOResponse>> listarLivros() {
-        return ResponseEntity.ok(bookService.listarLivrosAtivos());
+    @Operation(summary = "Listar livros ativos.", description = "Endpoint para listar livros com status ATIVO, do usuário logado.")
+    public ResponseEntity<List<BookDTOResponse>> listarLivrosAtivos(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.ok(bookService.listarLivrosAtivos(userDetails.getUserId()));
     }
 
     /**
@@ -40,21 +47,25 @@ public class BookController {
      * @return Uma lista de livros do usuário.
      */
     @GetMapping("/listarLivrosInativos")
-    public ResponseEntity<List<BookDTOResponse>> listarLivrosInativos() {
-        return ResponseEntity.ok(bookService.listarLivrosInativos());
+    @Operation(summary = "Listar livros inativos.", description = "Endpoint para listar livros com status INATIVO, do usuário logado.")
+    public ResponseEntity<List<BookDTOResponse>> listarLivrosInativos(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return ResponseEntity.ok(bookService.listarLivrosInativos(userDetails.getUserId()));
     }
 
     /**
      * Busca um livro específico pelo seu ID, garantindo que pertença ao usuário autenticado.
      * @param bookId O ID do livro a ser buscado.
-     * @return o medicamento encontrado.
+     * @return o livro encontrado.
      */
     @GetMapping("/listarLivroPorId/{bookId}")
     @Operation(summary = "Listar o livro pelo ID dele.", description = "Endpoint para listar um Livro específico do usuário logado.")
     public ResponseEntity<BookDTOResponse> listarLivroPorId(
-            @PathVariable("bookId") Integer bookId
+            @PathVariable("bookId") Integer bookId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        BookDTOResponse dtoResponse = bookService.listarLivroPorId(bookId);
+        BookDTOResponse dtoResponse = bookService.listarLivroPorId(bookId, userDetails.getUserId());
         return ResponseEntity.ok(dtoResponse);
     }
 
@@ -64,11 +75,13 @@ public class BookController {
      * @return O livro recém-criado.
      */
     @PostMapping("/cadastrar")
+    @Operation(summary = "Cadastrar Livro.", description = "Endpoint para cadastrar Livros.")
     public ResponseEntity<BookDTOResponse> cadastrarBook(
-            @Valid @RequestBody BookDTORequest dtoRequest
+            @Valid @RequestBody BookDTORequest dtoRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
 
-        BookDTOResponse dtoResponse = bookService.cadastrarLivro(dtoRequest);
+        BookDTOResponse dtoResponse = bookService.cadastrarLivro(dtoRequest, userDetails.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
     }
 
@@ -78,29 +91,31 @@ public class BookController {
      * @param atualizarDTORequest O DTO contendo os dados para atualização (apenas os campos que devem ser alterados).
      * @return O livro autalizado.
      */
-    @PatchMapping("/atualizar/{livroId}")
+    @PatchMapping("/atualizar/{bookId}")
     @Operation(summary = "Atualizar todos os dados do Livro.", description = "Endpoint para atualizar o registro do Livro existente do usuário logado.")
     public ResponseEntity<BookDTOResponse> atualizarLivroPorId(
-            @PathVariable("livroId") Integer bookId,
-            @RequestBody @Valid BookAtualizarDTORequest atualizarDTORequest
+            @PathVariable("bookId") Integer bookId,
+            @RequestBody @Valid BookAtualizarDTORequest atualizarDTORequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
 
-        BookDTOResponse livroAtualizado = bookService.atualizarLivroPorId(bookId, atualizarDTORequest);
-        return ResponseEntity.ok(livroAtualizado);
+        BookDTOResponse updatedBook = bookService.atualizarLivroPorId(bookId, atualizarDTORequest, userDetails.getUserId());
+        return ResponseEntity.ok(updatedBook);
     }
 
     /**
-     * Realiza a exclusão lógica de um livro do usuário autenticado.
-     * @param bookId O ID do livro a ser desativado.
-     * @return Resposta sem conteúdo.
+     * Atualiza o status de leitura (Lendo, Lido, Quero Ler) na estante do usuário.
+     * Observação: Retorna UserBookDTOResponse pois a mudança ocorre no vínculo, não na obra.
      */
-    @DeleteMapping("/deletar/{bookId}")
-    @Operation(summary = "Deletar todos os dados do Livro.", description = "Endpoint para deletar o registro do Livro do usuário logado.")
-    public ResponseEntity<Void> deletarLivro(
-            @PathVariable("bookId") Integer bookId
+    @PatchMapping("/atualizarStatusDeLeitura/{bookId}")
+    @Operation(summary = "Atualiza o status de leitura do Livro.", description = "Endpoint para atualizar o status de leitura do Livro do usuário logado.")
+    public ResponseEntity<UserBookDTOResponse> atualizarStatusDeLeitura(
+            @PathVariable("bookId") Integer bookId,
+            @RequestParam("status") BookReadingStatus status,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        bookService.deletarLogico(bookId);
-        return ResponseEntity.noContent().build();
+        UserBookDTOResponse response = bookService.mudarStatusDeLeitura(bookId, userDetails.getUserId(), status);
+        return ResponseEntity.ok(response);
     }
 
 }

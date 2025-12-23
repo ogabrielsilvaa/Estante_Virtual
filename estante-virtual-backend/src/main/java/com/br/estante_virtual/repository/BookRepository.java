@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repositório para gerenciar as operações de banco de dados para a entidade {@link com.br.estante_virtual.entity.Book}.
@@ -20,28 +21,20 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     /**
      * Lista todos os livros que correspondem ao status informado.
-     * * @param status O status para filtragem (ex: ATIVO).
+     * @param status 1 status para filtragem (ex: ATIVO).
+     * @param userId o ID do usuário logado.
      * @return Uma lista de livros com o status especificado.
      */
-    @Query("SELECT b FROM Book b WHERE b.status = :status")
-    List<Book> listarPorStatus(@Param("status") BookStatus status);
+    @Query("SELECT ub.book FROM UserBook ub WHERE ub.book.status = :status AND ub.user.id = :userId")
+    List<Book> listarPorStatusEUsuario(@Param("status") BookStatus status, @Param("userId") Integer userId);
 
     /**
      * Busca um livro específico pelo seu identificador único.
-     * * @param bookId O ID do livro.
+     * @param bookId O ID do livro.
+     * @param userId o ID do usuário logado.
      * @return A entidade Book encontrada.
      */
-    @Query("SELECT b FROM Book b WHERE b.id = :bookId")
-    Book listarLivroPorId(@Param("bookId") Integer bookId);
-
-    /**
-     * Realiza a exclusão lógica do livro.
-     * @param bookId O ID do livro.
-     * @param status O status para o qual o livro será atualizado (deve ser INATIVO).
-     */
-    @Modifying
-    @Transactional
-    @Query("UPDATE Book b SET b.status = :statusInativo WHERE b.id = :bookId")
-    void apagarLivroLogico(@Param("bookId") Integer bookId, @Param("statusInativo") BookStatus status);
+    @Query("SELECT ub.book FROM UserBook ub WHERE ub.book.id = :bookId AND ub.user.id = :userId")
+    Optional<Book> listarLivroPorIdEUsuario(@Param("bookId") Integer bookId, @Param("userId") Integer userId);
 
 }
