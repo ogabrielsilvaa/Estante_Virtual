@@ -14,7 +14,7 @@ public class BookDTOResponse {
     private Integer pageCount;
     private String publisher;
     private Integer publicationYear;
-    private BookReadingStatus status;
+    private Boolean statusActive;
 
     public BookDTOResponse() {
     }
@@ -29,7 +29,7 @@ public class BookDTOResponse {
         this.pageCount = bookEntity.getPageCount();
         this.publisher = bookEntity.getPublisher();
         this.publicationYear = bookEntity.getPublicationYear();
-        this.status = bookEntity.getStatus();
+        this.statusActive = bookEntity.getStatusActive();
     }
 
     public Integer getId() {
@@ -104,11 +104,11 @@ public class BookDTOResponse {
         this.publicationYear = publicationYear;
     }
 
-    public BookReadingStatus getStatus() {
-        return status;
+    public Boolean getStatusActive() {
+        return statusActive;
     }
 
-    public void setStatus(BookReadingStatus status) {
-        this.status = status;
+    public void setStatusActive(Boolean statusActive) {
+        this.statusActive = statusActive;
     }
 }
