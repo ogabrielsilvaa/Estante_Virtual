@@ -27,9 +27,6 @@ public class UserBook implements Serializable {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Column(name = "user_book_status")
-    private BookReadingStatus status;
-
     @Column(name = "user_book_pages_read")
     private Integer pagesRead = 0;
 
@@ -42,16 +39,23 @@ public class UserBook implements Serializable {
     @Column(name = "user_book_is_favorite")
     private Boolean favorite;
 
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "user_book_reading_status")
+    private BookReadingStatus readingStatus;
+
+    @Column(name = "user_book_is_active", nullable = false)
+    private Boolean statusActive = true;
+
 
     public UserBook() {
     }
 
-    public UserBook(User user, Book book) {
+    public UserBook(User user, Book book, BookReadingStatus readingStatus) {
         this.user = user;
         this.book = book;
         this.pagesRead = 0;
         this.favorite = false;
-        this.status = BookReadingStatus.QUERO_LER; // Ou outro status padrão
+        this.readingStatus = readingStatus;
     }
 
     public Integer getId() {
@@ -76,14 +80,6 @@ public class UserBook implements Serializable {
 
     public void setBook(Book book) {
         this.book = book;
-    }
-
-    public BookReadingStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BookReadingStatus status) {
-        this.status = status;
     }
 
     public Integer getPagesRead() {
@@ -116,6 +112,22 @@ public class UserBook implements Serializable {
 
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public BookReadingStatus getReadingStatus() {
+        return readingStatus;
+    }
+
+    public void setReadingStatus(BookReadingStatus readingStatus) {
+        this.readingStatus = readingStatus;
+    }
+
+    public Boolean getStatusActive() {
+        return statusActive;
+    }
+
+    public void setStatusActive(Boolean statusActive) {
+        this.statusActive = statusActive;
     }
 
     @Override

@@ -12,8 +12,9 @@ public class UserBookDTORequest {
     @NotNull(message = "O ID do livro é obrigatório.")
     private Integer bookId;
 
+    @NotNull(message = "O status da leitura é obrigatório (ex: QUERO_LER, LENDO).")
     @Schema(type = "integer", example = "0", description = "0: Quero Ler, 1: Lendo, 2: Lido, 3: Pendente, 4: Abandonei")
-    private BookReadingStatus status;
+    private BookReadingStatus readingStatus;
 
     @PositiveOrZero(message = "O número de páginas lidas não pode ser negativo.")
     private Integer pagesRead = 0;
@@ -25,9 +26,9 @@ public class UserBookDTORequest {
     public UserBookDTORequest() {
     }
 
-    public UserBookDTORequest(Integer bookId, BookReadingStatus status, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
+    public UserBookDTORequest(Integer bookId, BookReadingStatus readingStatus, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
         this.bookId = bookId;
-        this.status = status;
+        this.readingStatus = readingStatus;
         this.pagesRead = pagesRead;
         this.startDate = startDate;
         this.finishDate = finishDate;
@@ -42,12 +43,12 @@ public class UserBookDTORequest {
         this.bookId = bookId;
     }
 
-    public BookReadingStatus getStatus() {
-        return status;
+    public BookReadingStatus getReadingStatus() {
+        return readingStatus;
     }
 
-    public void setStatus(BookReadingStatus status) {
-        this.status = status;
+    public void setReadingStatus(BookReadingStatus readingStatus) {
+        this.readingStatus = readingStatus;
     }
 
     public Integer getPagesRead() {

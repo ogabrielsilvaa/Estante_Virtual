@@ -9,27 +9,30 @@ public class UserBookDTOResponse {
 
     private Integer id;
     private BookDTOResponse book;
-    private BookReadingStatus status;
+    private BookReadingStatus readingStatus;
     private Integer pagesRead;
     private LocalDate startDate;
     private LocalDate finishDate;
     private Boolean favorite;
+    private Boolean statusActive;
 
     public UserBookDTOResponse() {
     }
 
-    public UserBookDTOResponse(Integer id, BookDTOResponse book, BookReadingStatus status, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
+    public UserBookDTOResponse(Integer id, BookDTOResponse book, BookReadingStatus readingStatus, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite, Boolean statusActive) {
         this.id = id;
         this.book = book;
-        this.status = status;
+        this.readingStatus = readingStatus;
         this.pagesRead = pagesRead;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.favorite = favorite;
+        this.statusActive = statusActive;
     }
 
     public UserBookDTOResponse(UserBook userBook) {
-        this.status = userBook.getStatus();
+        this.id = userBook.getId();
+        this.readingStatus = userBook.getReadingStatus();
         this.pagesRead = userBook.getPagesRead();
         this.startDate = userBook.getStartDate();
         this.finishDate = userBook.getFinishDate();
@@ -38,6 +41,8 @@ public class UserBookDTOResponse {
         if (userBook.getBook() != null) {
             this.book = new BookDTOResponse(userBook.getBook());
         }
+
+        this.statusActive = userBook.getStatusActive();
     }
 
     public Integer getId() {
@@ -56,12 +61,12 @@ public class UserBookDTOResponse {
         this.book = book;
     }
 
-    public BookReadingStatus getStatus() {
-        return status;
+    public BookReadingStatus getReadingStatus() {
+        return readingStatus;
     }
 
-    public void setStatus(BookReadingStatus status) {
-        this.status = status;
+    public void setReadingStatus(BookReadingStatus readingStatus) {
+        this.readingStatus = readingStatus;
     }
 
     public Integer getPagesRead() {
@@ -94,5 +99,13 @@ public class UserBookDTOResponse {
 
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public Boolean getStatusActive() {
+        return statusActive;
+    }
+
+    public void setStatusActive(Boolean statusActive) {
+        this.statusActive = statusActive;
     }
 }
