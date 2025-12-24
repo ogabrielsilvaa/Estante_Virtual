@@ -3,6 +3,7 @@ package com.br.estante_virtual.controller;
 import com.br.estante_virtual.dto.request.userBook.UserBookAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.userBook.UserBookDTORequest;
 import com.br.estante_virtual.dto.response.UserBookDTOResponse;
+import com.br.estante_virtual.enums.BookReadingStatus;
 import com.br.estante_virtual.security.UserDetailsImpl;
 import com.br.estante_virtual.service.UserBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/userBook")
-@Tag(name = "UserBook", description = "API para gerenciamento de usuários e seus livros.")
+@Tag(name = "Estante do Usuário", description = "Gerenciamento da leitura pessoal e estante.")
 public class UserBookController {
 
     private UserBookService userBookService;
@@ -37,7 +38,7 @@ public class UserBookController {
      * @return Lista com os dados de leitura de cada livro.
      */
     @GetMapping("/listarEstante")
-    @Operation(summary = "Listar Estante", description = "Endpoint para listar a estante de livros de um Usuário.")
+    @Operation(summary = "Listar Estante", description = "Endpoint para listar todos os livros ativos na estante do usuário logado.")
     public ResponseEntity<List<UserBookDTOResponse>> listarEstante(
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
@@ -101,9 +102,27 @@ public class UserBookController {
             @RequestBody @Valid UserBookAtualizarDTORequest atualizarDTORequest
             ) {
         Integer userId = userDetails.getUserId();
-        UserBookDTOResponse dtoResponse = userBookService.atualizarLeitura(userId, bookId, atualizarDTORequest);
+        UserBookDTOResponse dtoResponse = userBookService.atualizarDetalhes(userId, bookId, atualizarDTORequest);
 
         return ResponseEntity.ok(dtoResponse);
+    }
+
+    /**
+     * Atualiza o status do livro na estante do usuário logado.
+     *
+     * @param userDetails Dados do usuário logado.
+     * @param bookId ID do livro a ser atualizado.
+     * @param readingStatus Status de leitura que será aplicado no livro
+     * @return
+     */
+    @PatchMapping("/atualizarStatus/{bookId}")
+    @Operation(summary = "Mudar Status", description = "Atualiza especificamente o status da leitura (Ex: Lendo -> Lido).")
+    public ResponseEntity<UserBookDTOResponse> mudarStatus(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Integer bookId,
+            @RequestParam BookReadingStatus readingStatus
+    ) {
+        return ResponseEntity.ok(userBookService.atualizarStatusLeitura(userDetails.getUserId(), bookId, readingStatus));
     }
 
     /**
@@ -114,7 +133,7 @@ public class UserBookController {
      * @return Retorna 204 No Content se a remoção for bem-sucedida.
      */
     @DeleteMapping("/removerDaEstante/{bookId}")
-    @Operation(summary = "Remover Livro", description = "Remove um livro da estante do usuário.")
+    @Operation(summary = "Remover da Estante", description = "Remove um livro da estante do usuário logado.")
     public ResponseEntity<Void> removerLivro(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Integer bookId

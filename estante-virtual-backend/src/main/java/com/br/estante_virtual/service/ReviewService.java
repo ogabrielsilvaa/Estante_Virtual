@@ -87,7 +87,7 @@ public class ReviewService {
     @Transactional
     public ReviewDTOResponse cadastrarReview(ReviewDTORequest dtoRequest, Integer userId) {
         //buscar o userBook, agora usando o método que busca pelo par de ids (User + Book)
-        UserBook userBook = userBookRepository.findByUserIdAndBookId(userId, dtoRequest.getBookId())
+        UserBook userBook = userBookRepository.listarPorId(userId, dtoRequest.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException("Este livro não está na estante do usuário."));
 
         //permite que o usuário crie somente 1 avaliação

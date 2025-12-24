@@ -1,9 +1,7 @@
 package com.br.estante_virtual.repository;
 
-import com.br.estante_virtual.dto.response.BookDTOResponse;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.enums.BookReadingStatus;
-import com.br.estante_virtual.enums.BookStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,46 +22,47 @@ public interface UserBookRepository extends JpaRepository<UserBook, Integer> {
 
     /**
      * Busca toda a estante de livros do usuário informado.
+     * @param userId ID do usuário logado.
+     * @return lista de livros com status ATIVO do usuário logado.
      */
-    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId")
-    List<UserBook> findByUserId(@Param("userId") Integer userId);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.statusActive = true")
+    List<UserBook> listarTodosAtivos(@Param("userId") Integer userId);
 
     /**
      * Busca a estante do usuário de forma paginada.
      * O Spring aplica a paginação automaticamente na Query JPQL.
+     * @param userId ID do usuário logado.
+     * @param pageable
+     * @return lista de livros com status ATIVO do usuário logado, com paginação.
      */
-    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId")
-    Page<UserBook> findByUserId(@Param("userId") Integer userId, Pageable pageable);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.statusActive = true")
+    Page<UserBook> listarTodosAtivosPaginado(@Param("userId") Integer userId, Pageable pageable);
 
     /**
-     * Busca livros do usuário filtrando pelo status (ex: LENDO, LIDO).
+     * Busca um livro específico na estante (somente se ativo)
+     * @param userId ID do usuário logado.
+     * @param bookId ID do livro.
+     * @return livro buscado.
      */
-    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.status = :status")
-    List<UserBook> findByUserIdAndStatus(@Param("userId") Integer userId,
-                                         @Param("status") BookReadingStatus status);
+    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id= :bookId AND ub.statusActive = true")
+    Optional<UserBook> listarPorId(@Param("userId") Integer userId,
+                         @Param("bookId") Integer bookId);
 
     /**
-     * Verifica se este livro já existe na estante deste usuário.
-     * Implementado contando se existe algum registro (> 0).
+     * Verifica existência (somente se ativo).
+     * @param userId ID do usuário logado.
+     * @param bookId ID do livro.
+     * @return boolean dizendo se o livro existe ou não.
      */
-    @Query("SELECT CASE WHEN COUNT(ub) > 0 THEN true ELSE false END FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id = :bookId")
-    boolean existsByUserIdAndBookId(@Param("userId") Integer userId,
-                                    @Param("bookId") Integer bookId);
+    @Query("SELECT CASE WHEN COUNT(ub) > 0 THEN true ELSE false END FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id = :bookId AND ub.statusActive = true")
+    boolean verificarLivroNaEstante(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 
     /**
-     * Busca um registro específico pelo par Usuário + Livro.
-     */
-    @Query("SELECT ub FROM UserBook ub WHERE ub.user.id = :userId AND ub.book.id = :bookId")
-    Optional<UserBook> findByUserIdAndBookId(@Param("userId") Integer userId,
-                                             @Param("bookId") Integer bookId);
-
-    /**
-     * Atualiza o status do livro na estante para realizar a exclusão lógica.
+     * SOFT DELETE: Apenas desativa o registro, mantendo histórico
+     * @param userId ID do usuário logado.
+     * @param bookId ID do livro.
      */
     @Modifying
-    @Transactional
-    @Query("UPDATE UserBook ub SET ub.status = :status WHERE ub.user.id = :userId AND ub.book.id = :bookId")
-    void mudarStatusDoLivro(@Param("userId") Integer userId,
-                                       @Param("bookId") Integer bookId,
-                                       @Param("status") BookReadingStatus status);
+    @Query("UPDATE UserBook ub SET ub.statusActive = false WHERE ub.user.id = :userId AND ub.book.id = :bookId")
+    void desativarLivro(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 }
