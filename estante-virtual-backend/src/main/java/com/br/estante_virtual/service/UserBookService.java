@@ -98,7 +98,8 @@ public class UserBookService {
 
         userBookMapper.updateEntity(userBook, dtoRequest);
 
-        return new UserBookDTOResponse(userBookRepository.save(userBook));
+        UserBook updatedUserBook = userBookRepository.save(userBook);
+        return new UserBookDTOResponse(updatedUserBook);
     }
 
     /**
