@@ -6,11 +6,14 @@ import com.br.estante_virtual.dto.response.ReviewDTOResponse;
 import com.br.estante_virtual.entity.Review;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.enums.ReviewStatus;
+import com.br.estante_virtual.mapper.ReviewMapper;
 import com.br.estante_virtual.repository.ReviewRepository;
 import com.br.estante_virtual.repository.UserBookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,46 +27,26 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserBookRepository userBookRepository;
 
+    private final ReviewMapper reviewMapper;
+
     @Autowired
     public ReviewService(
             ReviewRepository reviewRepository,
-            UserBookRepository userBookRepository
+            UserBookRepository userBookRepository,
+            ReviewMapper reviewMapper
     ) {
         this.reviewRepository = reviewRepository;
         this.userBookRepository = userBookRepository;
+        this.reviewMapper = reviewMapper;
     }
 
     /**
-     * Busca as reviews que estão com status PUBLICADO.
+     * Busca as reviews que estão com status desejado.
      * @return lista de reviews publicadas.
      */
-    public List<ReviewDTOResponse> listarReviewsPublicadas(Integer userId) {
-        return reviewRepository.listarPorStatusEUsuario(ReviewStatus.PUBLICADO, userId)
-                .stream()
-                .map(ReviewDTOResponse::new)
-                .toList();
-    }
-
-    /**
-     * Busca as reviews que estão com status RASCUNHO.
-     * @return lista de reviews rascunho.
-     */
-    public List<ReviewDTOResponse> listarReviewsRascunhos(Integer userId) {
-        return reviewRepository.listarPorStatusEUsuario(ReviewStatus.RASCUNHO, userId)
-                .stream()
-                .map(ReviewDTOResponse::new)
-                .toList();
-    }
-
-    /**
-     * Busca as reviews que estão com status APAGADO.
-     * @return lista de reviews apagadas.
-     */
-    public List<ReviewDTOResponse> listarReviewsApagados(Integer userId) {
-        return reviewRepository.listarPorStatusEUsuario(ReviewStatus.APAGADO, userId)
-                .stream()
-                .map(ReviewDTOResponse::new)
-                .toList();
+    public Page<ReviewDTOResponse> listarReviewsPorStatus(Integer userId, ReviewStatus status, Pageable pageable) {
+        return reviewRepository.listarPorStatusEUsuario(status, userId, pageable)
+                .map(ReviewDTOResponse::new);
     }
 
     /**
@@ -95,15 +78,7 @@ public class ReviewService {
             throw new IllegalArgumentException("Você já avaliou este livro.");
         }
 
-        Review newReview = new Review();
-
-        newReview.setUserBook(userBook);
-        newReview.setRatingPlot(dtoRequest.getRatingPlot());
-        newReview.setRatingCharacters(dtoRequest.getRatingCharacters());
-        newReview.setRatingWriting(dtoRequest.getRatingWriting());
-        newReview.setRatingImmersion(dtoRequest.getRatingImmersion());
-        newReview.setText(dtoRequest.getText());
-        newReview.setStatus(dtoRequest.getStatus());
+        Review newReview = reviewMapper.toEntity(dtoRequest, userBook);
 
         Review savedReview = reviewRepository.save(newReview);
         return new ReviewDTOResponse(savedReview);
@@ -112,40 +87,18 @@ public class ReviewService {
     /**
      * Atualiza os dados de uma review existente.
      * @param reviewId O ID da review a ser atualizada.
-     * @param atualizarDTORequest O DTO com os novos dados.
+     * @param dtoAtualizar O DTO com os novos dados.
      * @return O {@link ReviewDTOResponse} da entidade atualizada.
      */
     @Transactional
     public ReviewDTOResponse atualizarReviewPorId(
             Integer reviewId,
-            ReviewAtualizarDTORequest atualizarDTORequest,
+            ReviewAtualizarDTORequest dtoAtualizar,
             Integer userId
             ) {
         Review existingReview = validarReview(reviewId, userId);
 
-        if (atualizarDTORequest.getRatingPlot() != null) {
-            existingReview.setRatingPlot(atualizarDTORequest.getRatingPlot());
-        }
-
-        if (atualizarDTORequest.getRatingCharacters() != null) {
-            existingReview.setRatingCharacters(atualizarDTORequest.getRatingCharacters());
-        }
-
-        if (atualizarDTORequest.getRatingWriting() != null) {
-            existingReview.setRatingWriting(atualizarDTORequest.getRatingWriting());
-        }
-
-        if (atualizarDTORequest.getRatingImmersion() != null) {
-            existingReview.setRatingImmersion(atualizarDTORequest.getRatingImmersion());
-        }
-
-        if (atualizarDTORequest.getText() != null) {
-            existingReview.setText(atualizarDTORequest.getText());
-        }
-
-        if (atualizarDTORequest.getStatus() != null) {
-            existingReview.setStatus(atualizarDTORequest.getStatus());
-        }
+        reviewMapper.updateEntity(existingReview, dtoAtualizar);
 
         Review updatedReview = reviewRepository.save(existingReview);
 

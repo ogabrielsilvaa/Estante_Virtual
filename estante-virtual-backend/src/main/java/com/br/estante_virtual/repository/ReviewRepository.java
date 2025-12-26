@@ -4,6 +4,8 @@ import com.br.estante_virtual.entity.Review;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.enums.ReviewStatus;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,7 +56,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     void apagarReviewLogico(@Param("reviewId") Integer reviewId, @Param("statusApagado") ReviewStatus status);
 
     @Query("SELECT r FROM Review r WHERE r.status = :status AND r.userBook.user.id = :userId")
-    List<Review> listarPorStatusEUsuario(@Param("status") ReviewStatus status, @Param("userId") Integer userId);
+    Page<Review> listarPorStatusEUsuario(@Param("status") ReviewStatus status, @Param("userId") Integer userId, Pageable pageable);
 
     /**
      * Busca uma review pelo ID, mas apenas se pertencer ao usuário logado.

@@ -3,17 +3,21 @@ package com.br.estante_virtual.controller;
 import com.br.estante_virtual.dto.request.review.ReviewAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.review.ReviewDTORequest;
 import com.br.estante_virtual.dto.response.ReviewDTOResponse;
+import com.br.estante_virtual.enums.ReviewStatus;
 import com.br.estante_virtual.security.UserDetailsImpl;
 import com.br.estante_virtual.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -31,39 +35,19 @@ public class ReviewController {
     }
 
     /**
-     * Lista todos as reviews publicadas do usuário autenticado.
+     * Lista todos as reviews com base no status desejado.
      * @return Uma lista de reviews do usuário.
      */
     @GetMapping("/listarReviewsPublicadas")
     @Operation(summary = "Listar reviews publicadas.", description = "Endpoint para listar reviews publicadas do usuário logado.")
-    public ResponseEntity<List<ReviewDTOResponse>> listarReviewsPublicadas(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+    public ResponseEntity<Page<ReviewDTOResponse>> listarReviewsPublicadas(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(defaultValue = "PUBLICADO") ReviewStatus status,
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResponseEntity.ok(reviewService.listarReviewsPublicadas(userDetails.getUserId()));
-    }
-
-    /**
-     * Lista todos as reviews rascunhos do usuário autenticado.
-     * @return Uma lista de reviews do usuário.
-     */
-    @GetMapping("/listarReviewsRascunhos")
-    @Operation(summary = "Listar reviews rascunhos.", description = "Endpoint para listar reviews que estão em rascunho do usuário logado.")
-    public ResponseEntity<List<ReviewDTOResponse>> listarReviewsRascunhos(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        return ResponseEntity.ok(reviewService.listarReviewsRascunhos(userDetails.getUserId()));
-    }
-
-    /**
-     * Lista todos as reviews apagadas do usuário autenticado.
-     * @return Uma lista de reviews do usuário.
-     */
-    @GetMapping("/listarReviewsApagadas")
-    @Operation(summary = "Listar reviews apagadas.", description = "Endpoint para listar reviews apagadas do usuário logado.")
-    public ResponseEntity<List<ReviewDTOResponse>> listarReviewsApagadas(
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        return ResponseEntity.ok(reviewService.listarReviewsApagados(userDetails.getUserId()));
+        return ResponseEntity.ok(
+                reviewService.listarReviewsPorStatus(userDetails.getUserId(), status, pageable)
+        );
     }
 
     /**
