@@ -7,6 +7,7 @@ import com.br.estante_virtual.entity.Book;
 import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.entity.UserBook;
 import com.br.estante_virtual.enums.BookReadingStatus;
+import com.br.estante_virtual.mapper.UserBookMapper;
 import com.br.estante_virtual.repository.BookRepository;
 import com.br.estante_virtual.repository.UserBookRepository;
 import com.br.estante_virtual.repository.UserRepository;
@@ -24,15 +25,19 @@ public class UserBookService {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
+    private final UserBookMapper userBookMapper;
+
     @Autowired
     public UserBookService(
             UserBookRepository userBookRepository,
             UserRepository userRepository,
-            BookRepository bookRepository
+            BookRepository bookRepository,
+            UserBookMapper userBookMapper
     ) {
         this.userBookRepository = userBookRepository;
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
+        this.userBookMapper = userBookMapper;
     }
 
     /**
@@ -64,38 +69,19 @@ public class UserBookService {
     @Transactional
     public UserBookDTOResponse adicionarLivroNaEstante(Integer userId, UserBookDTORequest dtoRequest) {
         if(userBookRepository.verificarLivroNaEstante(userId, dtoRequest.getBookId())) {
-            throw new RuntimeException("Este livro já está na sua estante.");
+            throw new IllegalArgumentException("Este livro já está na sua estante.");
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         Book book = bookRepository.buscarPorIdAtivo(dtoRequest.getBookId())
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Livro não encontrado."));
 
-        UserBook novoRegistro = montarUserBook(user, book, dtoRequest);
+        UserBook novoRegistro = userBookMapper.toEntity(user, book, dtoRequest);
 
         userBookRepository.save(novoRegistro);
         return new UserBookDTOResponse(novoRegistro);
-    }
-
-    /**
-     * Método auxiliar privado para instanciar e popular o UserBook.
-     * Isola a complexidade de mapeamento DTO -> Entity.
-     */
-    private UserBook montarUserBook(User user, Book book, UserBookDTORequest dto) {
-        UserBook userBook = new UserBook();
-
-        userBook.setUser(user);
-        userBook.setBook(book);
-        userBook.setReadingStatus(dto.getReadingStatus());
-        userBook.setStatusActive(true);
-        userBook.setPagesRead(dto.getPagesRead() != null ? dto.getPagesRead() : 0);
-        userBook.setStartDate(dto.getStartDate());
-        userBook.setFinishDate(dto.getFinishDate());
-        userBook.setFavorite(dto.getFavorite() != null ? dto.getFavorite() : false);
-
-        return userBook;
     }
 
     /**
@@ -110,31 +96,9 @@ public class UserBookService {
         UserBook userBook = userBookRepository.listarPorId(userId, bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Livro não encontrado na estante."));
 
-        atualizarCampos(userBook, dtoRequest);
+        userBookMapper.updateEntity(userBook, dtoRequest);
 
         return new UserBookDTOResponse(userBookRepository.save(userBook));
-    }
-
-    /**
-     * Método auxiliar privado para transferir os dados do DTO para a Entidade.
-     * Verifica campo a campo se houve alteração (não nulo).
-     */
-    private void atualizarCampos(UserBook userBook, UserBookAtualizarDTORequest dtoRequest) {
-        if (dtoRequest.getPagesRead() != null) {
-            userBook.setPagesRead(dtoRequest.getPagesRead());
-        }
-
-        if (dtoRequest.getStartDate() != null) {
-            userBook.setStartDate(dtoRequest.getStartDate());
-        }
-
-        if (dtoRequest.getFinishDate() != null) {
-            userBook.setFinishDate(dtoRequest.getFinishDate());
-        }
-
-        if (dtoRequest.getFavorite() != null) {
-            userBook.setFavorite(dtoRequest.getFavorite());
-        }
     }
 
     /**
