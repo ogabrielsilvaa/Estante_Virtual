@@ -10,6 +10,7 @@ import com.br.estante_virtual.entity.Role;
 import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.enums.RoleName;
 import com.br.estante_virtual.enums.UserStatus;
+import com.br.estante_virtual.mapper.UserMapper;
 import com.br.estante_virtual.repository.RoleRepository;
 import com.br.estante_virtual.repository.UserRepository;
 import com.br.estante_virtual.security.UserDetailsImpl;
@@ -32,20 +33,21 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
-    private JwtTokenService jwtTokenService;
-    private RoleRepository roleRepository;
+    private final UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenService jwtTokenService;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserService(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
             JwtTokenService jwtTokenService,
-            RoleRepository roleRepository) {
+            RoleRepository roleRepository,
+            UserMapper userMapper
+    ) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
         this.jwtTokenService = jwtTokenService;
         this.roleRepository = roleRepository;
@@ -65,25 +67,17 @@ public class UserService {
      * Cria um novo usuário no sistema com a permissão padrão de cliente.
      * Este método faz parte do fluxo de segurança e registro.
      *
-     * @param userDTORequest DTO contendo os dados(nome, email, senha) do novo usuário.
+     * @param dtoRequest DTO contendo os dados(nome, email, senha) do novo usuário.
      * @throws RuntimeException se já existir um usuário cadastrado com o mesmo e-mail,
      * ou se a role padrão 'ROLE_CUSTOMER' não for encontrada no sistema.
      */
-    public void criarUsuario(UserDTORequest userDTORequest) {
-        if (userRepository.findByEmail(userDTORequest.getEmail()).isPresent()) {
+    public void criarUsuario(UserDTORequest dtoRequest) {
+        if (userRepository.findByEmail(dtoRequest.getEmail()).isPresent()) {
             throw new RuntimeException("Usuário com este email já existe.");
         }
 
-        User novoUsuario = new User();
-        novoUsuario.setName(userDTORequest.getName());
-        novoUsuario.setEmail(userDTORequest.getEmail().toLowerCase());
-        novoUsuario.setPassword(passwordEncoder.encode(userDTORequest.getPassword()));
-
-        Role rolePadrao = roleRepository.findByName(RoleName.ROLE_CUSTOMER)
-                .orElseThrow(() -> new RuntimeException("Erro crítico: A role padrão 'ROLE_CUSTOMER' não foi encontrada no banco."));
-
-        novoUsuario.setRoles(Set.of(rolePadrao));
-        userRepository.save(novoUsuario);
+        User newUser = userMapper.toEntity(dtoRequest);
+        userRepository.save(newUser);
     }
 
     /**
@@ -113,16 +107,14 @@ public class UserService {
     /**
      * Atualiza os dados de um usuário existente.
      * @param userId O ID do usuário autenticado (vindo do token).
-     * @param atualizarDTORequest O DTO com os novos dados.
+     * @param dtoAtualizar O DTO com os novos dados.
      * @return O {@link UserDTOResponse} da entidade atualizada.
      */
     @Transactional
-    public UserDTOResponse autalizarMeuPerfil(Integer userId, UserAtualizarDTORequest atualizarDTORequest) {
+    public UserDTOResponse atualizarMeuPerfil(Integer userId, UserAtualizarDTORequest dtoAtualizar) {
         User existingUser = validarUser(userId);
 
-        if (atualizarDTORequest.getName() != null) {
-            existingUser.setName(atualizarDTORequest.getName());
-        }
+        userMapper.updateEntity(existingUser, dtoAtualizar);
 
         User updatedUser = userRepository.save(existingUser);
         return new UserDTOResponse(updatedUser);

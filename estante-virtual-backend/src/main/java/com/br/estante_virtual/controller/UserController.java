@@ -90,7 +90,7 @@ public class UserController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
             ) {
         Integer userId = userDetails.getUserId();
-        UserDTOResponse userAtualizado = userService.autalizarMeuPerfil(userId, dtoRequest);
+        UserDTOResponse userAtualizado = userService.atualizarMeuPerfil(userId, dtoRequest);
 
         return ResponseEntity.ok(userAtualizado);
     }

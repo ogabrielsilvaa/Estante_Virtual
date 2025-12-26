@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * Camada de serviço para gerenciar a lógica de negócio do catálogo de reviews.
