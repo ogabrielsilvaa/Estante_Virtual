@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BookReadingStatus {
-    QUERO_LER(0, "Quero Ler"),
-    LENDO(1, "Lendo"),
-    LIDO(2, "Lido"),
-    PENDENTE(3, "Pendente"),
-    ABANDONEI(4, "Abandonei");
+    QUERO_LER(0, "QUERO_LER"),
+    LENDO(1, "LENDO"),
+    LIDO(2, "LIDO"),
+    PENDENTE(3, "PENDENTE"),
+    ABANDONEI(4, "ABANDONEI");
 
     private final int id;
     private final String descricao;

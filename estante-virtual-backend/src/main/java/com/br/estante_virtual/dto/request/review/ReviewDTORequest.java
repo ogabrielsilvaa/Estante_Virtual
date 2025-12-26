@@ -10,9 +10,6 @@ import java.io.Serializable;
 
 public class ReviewDTORequest implements Serializable {
 
-    @NotNull(message = "O ID do usuário é obrigatório.")
-    private Integer userId;
-
     @NotNull(message = "O ID do livro é obrigatório.")
     private Integer bookId;
 
@@ -42,8 +39,7 @@ public class ReviewDTORequest implements Serializable {
     public ReviewDTORequest() {
     }
 
-    public ReviewDTORequest(Integer userId, Integer bookId, RatingLevel ratingPlot, RatingLevel ratingCharacters, RatingLevel ratingWriting, RatingLevel ratingImmersion, String text, ReviewStatus status) {
-        this.userId = userId;
+    public ReviewDTORequest(Integer bookId, RatingLevel ratingPlot, RatingLevel ratingCharacters, RatingLevel ratingWriting, RatingLevel ratingImmersion, String text, ReviewStatus status) {
         this.bookId = bookId;
         this.ratingPlot = ratingPlot;
         this.ratingCharacters = ratingCharacters;
@@ -51,14 +47,6 @@ public class ReviewDTORequest implements Serializable {
         this.ratingImmersion = ratingImmersion;
         this.text = text;
         this.status = status;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getBookId() {

@@ -95,7 +95,7 @@ public class UserBookController {
      * @return O registro atualizado.
      */
     @PatchMapping("/atualizar/{bookId}")
-    @Operation(summary = "Atualizar Leitura", description = "Atualiza status, páginas lidas, nota, etc. Envie apenas os campos que deseja alterar.")
+    @Operation(summary = "Atualizar dados sobre a leitura.", description = "Atualiza status, páginas lidas, nota, etc. Envie apenas os campos que deseja alterar.")
     public ResponseEntity<UserBookDTOResponse> atualizarLeitura(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Integer bookId,
@@ -115,8 +115,8 @@ public class UserBookController {
      * @param readingStatus Status de leitura que será aplicado no livro
      * @return
      */
-    @PatchMapping("/atualizarStatus/{bookId}")
-    @Operation(summary = "Mudar Status", description = "Atualiza especificamente o status da leitura (Ex: Lendo -> Lido).")
+    @PatchMapping("/atualizarLeitura/{bookId}")
+    @Operation(summary = "Mudar Status de Leitura", description = "Atualiza especificamente o status da leitura (Ex: Lendo -> Lido).")
     public ResponseEntity<UserBookDTOResponse> mudarStatus(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Integer bookId,
