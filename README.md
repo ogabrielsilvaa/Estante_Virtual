@@ -29,7 +29,7 @@ O objetivo do Estante Virtual é fornecer uma plataforma onde leitores podem org
 
 Abaixo está o Diagrama de Entidade-Relacionamento (DER) que representa a estrutura do banco de dados, incluindo as tabelas `users`, `books`, `user_books` (tabela associativa da estante) e `reviews`.
 
-![Diagrama da Modelagem do Banco de Dados]([https://placehold.co/800x400?text=Espaco+para+Imagem+do+DER](https://github.com/ogabrielsilvaa/Estante_Virtual/blob/main/Modelagem%20do%20Banco.png))
+![Diagrama da Modelagem do Banco de Dados](https://github.com/ogabrielsilvaa/Estante_Virtual/raw/main/Modelagem%20do%20Banco.png)
 
 > **Nota:** A tabela `user_books` serve como o coração do sistema, ligando usuários a livros e armazenando o estado individual de leitura.
 
