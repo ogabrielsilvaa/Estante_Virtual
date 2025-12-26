@@ -6,9 +6,20 @@ import com.br.estante_virtual.entity.Review;
 import com.br.estante_virtual.entity.UserBook;
 import org.springframework.stereotype.Component;
 
+/**
+ * Componente responsável pela conversão e mapeamento de dados entre DTOs e a entidade Review (Avaliação).
+ */
 @Component
 public class ReviewMapper {
 
+    /**
+     * Converte um DTO de criação em uma nova entidade Review.
+     * Associa a avaliação ao registro do livro na estante (UserBook).
+     *
+     * @param dtoRequest Dados da avaliação (notas, texto, status).
+     * @param userBook O registro do livro na estante do usuário que está sendo avaliado.
+     * @return Uma nova instância de {@link Review} preenchida.
+     */
     public Review toEntity(ReviewDTORequest dtoRequest, UserBook userBook) {
         Review newReview = new Review();
 
@@ -23,6 +34,13 @@ public class ReviewMapper {
         return newReview;
     }
 
+    /**
+     * Atualiza os dados de uma avaliação existente.
+     * Realiza atualização parcial (apenas campos não nulos no DTO são alterados).
+     *
+     * @param review A entidade de avaliação a ser atualizada.
+     * @param dtoAtualizar O DTO contendo os novos dados (notas, texto ou status).
+     */
     public void updateEntity(Review review, ReviewAtualizarDTORequest dtoAtualizar) {
 
         if (dtoAtualizar.getRatingPlot() != null) {

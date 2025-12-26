@@ -7,46 +7,58 @@ import com.br.estante_virtual.entity.User;
 import com.br.estante_virtual.entity.UserBook;
 import org.springframework.stereotype.Component;
 
+/**
+ * Componente responsável pelo mapeamento de dados entre DTOs e a entidade UserBook (Estante).
+ */
 @Component
 public class UserBookMapper {
 
     /**
-     * Método auxiliar público para popular os dados do DTORequest para a Entidade.
+     * Cria uma nova entidade UserBook associando um usuário a um livro.
+     * Define valores padrão para status ativo, páginas lidas e favorito.
+     *
+     * @param user O usuário dono da estante.
+     * @param book O livro a ser adicionado.
+     * @param dtoRequest Os dados iniciais da leitura.
+     * @return Uma nova instância de {@link UserBook} pronta para persistência.
      */
-    public UserBook toEntity(User user, Book book, UserBookDTORequest dto) {
+    public UserBook toEntity(User user, Book book, UserBookDTORequest dtoRequest) {
         UserBook userBook = new UserBook();
 
         userBook.setUser(user);
         userBook.setBook(book);
-        userBook.setReadingStatus(dto.getReadingStatus());
+        userBook.setReadingStatus(dtoRequest.getReadingStatus());
         userBook.setStatusActive(true);
-        userBook.setPagesRead(dto.getPagesRead() != null ? dto.getPagesRead() : 0);
-        userBook.setStartDate(dto.getStartDate());
-        userBook.setFinishDate(dto.getFinishDate());
-        userBook.setFavorite(dto.getFavorite() != null ? dto.getFavorite() : false);
+        userBook.setPagesRead(dtoRequest.getPagesRead() != null ? dtoRequest.getPagesRead() : 0);
+        userBook.setStartDate(dtoRequest.getStartDate());
+        userBook.setFinishDate(dtoRequest.getFinishDate());
+        userBook.setFavorite(dtoRequest.getFavorite() != null ? dtoRequest.getFavorite() : false);
 
         return userBook;
     }
 
     /**
-     * Método auxiliar público para transferir os dados do DTO para a Entidade.
-     * Verifica campo a campo se houve alteração (não nulo).
+     * Atualiza os campos de um registro existente na estante.
+     * Realiza atualização parcial (apenas campos não nulos no DTO são alterados).
+     *
+     * @param userBook A entidade a ser atualizada.
+     * @param dtoAtualizar O DTO contendo os novos dados.
      */
-    public void updateEntity(UserBook userBook, UserBookAtualizarDTORequest dtoRequest) {
-        if (dtoRequest.getPagesRead() != null) {
-            userBook.setPagesRead(dtoRequest.getPagesRead());
+    public void updateEntity(UserBook userBook, UserBookAtualizarDTORequest dtoAtualizar) {
+        if (dtoAtualizar.getPagesRead() != null) {
+            userBook.setPagesRead(dtoAtualizar.getPagesRead());
         }
 
-        if (dtoRequest.getStartDate() != null) {
-            userBook.setStartDate(dtoRequest.getStartDate());
+        if (dtoAtualizar.getStartDate() != null) {
+            userBook.setStartDate(dtoAtualizar.getStartDate());
         }
 
-        if (dtoRequest.getFinishDate() != null) {
-            userBook.setFinishDate(dtoRequest.getFinishDate());
+        if (dtoAtualizar.getFinishDate() != null) {
+            userBook.setFinishDate(dtoAtualizar.getFinishDate());
         }
 
-        if (dtoRequest.getFavorite() != null) {
-            userBook.setFavorite(dtoRequest.getFavorite());
+        if (dtoAtualizar.getFavorite() != null) {
+            userBook.setFavorite(dtoAtualizar.getFavorite());
         }
     }
 

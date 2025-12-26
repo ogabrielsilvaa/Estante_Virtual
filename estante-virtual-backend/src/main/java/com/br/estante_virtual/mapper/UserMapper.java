@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Componente responsável pelo mapeamento e conversão de dados entre DTOs de Usuário e a Entidade User.
+ */
 @Component
 public class UserMapper {
 
@@ -25,6 +28,13 @@ public class UserMapper {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * Converte o DTO de cadastro em uma nova entidade User.
+     * Aplica criptografia na senha e define a role padrão (CUSTOMER).
+     *
+     * @param dtoRequest Dados de entrada para criação do usuário.
+     * @return Uma nova instância de {@link User} pronta para ser persistida.
+     */
     public User toEntity(UserDTORequest dtoRequest) {
         User newUser = new User();
         newUser.setName(dtoRequest.getName());
@@ -39,6 +49,13 @@ public class UserMapper {
         return newUser;
     }
 
+    /**
+     * Atualiza os campos de um usuário existente com base no DTO.
+     * Realiza verificação para alterar apenas campos não nulos.
+     *
+     * @param user A entidade do usuário a ser atualizada.
+     * @param dtoAtualizar O DTO contendo os novos dados.
+     */
     public void updateEntity(User user, UserAtualizarDTORequest dtoAtualizar) {
         if (dtoAtualizar.getName() != null) {
             user.setName(dtoAtualizar.getName());
