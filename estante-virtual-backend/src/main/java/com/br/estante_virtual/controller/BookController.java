@@ -10,6 +10,7 @@ import com.br.estante_virtual.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,8 @@ public class BookController {
      * @return Uma lista de livros.
      */
     @GetMapping("/listarCatalogo")
-    @Operation(summary = "Listar catálogo..", description = "Lista todos os livros ativos disponíveis no sistema.")
-    public ResponseEntity<List<BookDTOResponse>> listarCatalogo(
+    @Operation(summary = "Listar catálogo.", description = "Lista todos os livros ativos disponíveis no sistema.")
+    public ResponseEntity<Page<BookDTOResponse>> listarCatalogo(
             @PageableDefault(size = 10, sort = "tittle")Pageable pageable
             ) {
         return ResponseEntity.ok(bookService.listarLivrosAtivos(pageable));
