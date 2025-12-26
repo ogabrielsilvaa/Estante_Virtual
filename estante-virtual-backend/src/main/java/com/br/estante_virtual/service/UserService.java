@@ -21,7 +21,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Camada de serviço para gerenciar a lógica de negócio dos Usuários.
@@ -103,15 +105,9 @@ public class UserService {
 
         String token = jwtTokenService.generateToken(new UserDetailsImpl(user));
 
-        UserLoginDTOResponse userDTO = new UserLoginDTOResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getStatus()
-        );
+        UserLoginDTOResponse dtoResponse = new UserLoginDTOResponse(user);
 
-        return new RecoveryJwtTokenDTO(token, userDTO);
+        return new RecoveryJwtTokenDTO(token, dtoResponse);
     }
 
     /**
@@ -160,4 +156,22 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Promove um usuário comum do sistema para administrador.
+     * @param userId ID do usuário existente.
+     * @return UserLoginDTOResponse mostrando dados do usuário.
+     */
+    @Transactional
+    public UserLoginDTOResponse promoverUsuario(Integer userId) {
+        User user = validarUser(userId);
+
+        Role roleAdmin = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                .orElseThrow(() -> new RuntimeException("Erro crítico: A role padrão 'ROLE_ADMIN' não foi encontrada no banco."));
+
+        user.setRoles(new HashSet<>(Set.of(roleAdmin)));
+
+        User promotedUser = userRepository.save(user);
+
+        return new UserLoginDTOResponse(promotedUser);
+    }
 }

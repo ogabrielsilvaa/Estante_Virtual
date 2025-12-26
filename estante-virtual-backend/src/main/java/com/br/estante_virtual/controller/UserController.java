@@ -5,6 +5,7 @@ import com.br.estante_virtual.dto.request.user.UserAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.user.UserDTORequest;
 import com.br.estante_virtual.dto.request.user.UserLoginDTORequest;
 import com.br.estante_virtual.dto.response.user.UserDTOResponse;
+import com.br.estante_virtual.dto.response.user.UserLoginDTOResponse;
 import com.br.estante_virtual.security.UserDetailsImpl;
 import com.br.estante_virtual.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,5 +108,21 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Realiza a promoção de um usuário normal para administrador.
+     * @param userId ID do usuário que será promovido.
+     * @return UserLoginDTOResponse com os dados do usuário atualizados.
+     */
+    @PatchMapping("/promoverUsuario/{userId}")
+    @Operation(summary = "Promover para administrador.", description = "Promove a conta de um usuário cadastrado para administrador.")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserLoginDTOResponse> promoverParaAdmin(
+            @PathVariable Integer userId
+    ) {
+        UserLoginDTOResponse promotedUser = userService.promoverUsuario(userId);
+        return ResponseEntity.ok(promotedUser);
+    }
+
 
 }
