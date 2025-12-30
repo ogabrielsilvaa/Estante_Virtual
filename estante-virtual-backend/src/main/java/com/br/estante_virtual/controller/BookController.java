@@ -66,8 +66,8 @@ public class BookController {
      * @return O livro recém-criado.
      */
     @PostMapping("/cadastrar")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Cadastrar Livro (Admin).", description = "Adiciona um novo livro ao catálogo global.")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')")
+    @Operation(summary = "Cadastrar Livro.", description = "Adiciona um novo livro ao catálogo global.")
     public ResponseEntity<BookDTOResponse> cadastrar(
             @Valid @RequestBody BookDTORequest dtoRequest
             ) {
@@ -83,8 +83,8 @@ public class BookController {
      * @return O livro autalizado.
      */
     @PutMapping("/atualizar/{bookId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Atualizar Livro (Admin).", description = "Endpoint para atualizar o registro do Livro existente.")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')")
+    @Operation(summary = "Atualizar Livro.", description = "Endpoint para atualizar o registro do Livro existente.")
     public ResponseEntity<BookDTOResponse> atualizarLivroPorId(
             @PathVariable("bookId") Integer bookId,
             @RequestBody @Valid BookAtualizarDTORequest atualizarDTORequest
@@ -108,6 +108,26 @@ public class BookController {
     ) {
         bookService.atualizarStatusGlobal(bookId, status);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Endpoint para buscar livros na API externa (Open Library).
+     * Repassa a consulta para o serviço e retorna os dados formatados para pré-cadastro.
+     *
+     * @param query Termo de pesquisa (Título, Autor ou ISBN).
+     * @return Lista de livros encontrados (200 OK) ou erro 400 se a busca for vazia.
+     */
+    @GetMapping("/external-search")
+    @Operation(summary = "Buscar livros na Open Library.",
+            description = "Pesquisa livros na API externa e retorna objetos prontos para serem usados no cadastro.")
+    public ResponseEntity<List<BookDTORequest>> buscarLivrosExternos(
+            @RequestParam String query
+    ) {
+        if (query == null || query.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(bookService.buscarLivrosNaAPIExterna(query));
     }
 
 }

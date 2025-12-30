@@ -1,5 +1,6 @@
 package com.br.estante_virtual.mapper;
 
+import com.br.estante_virtual.dto.openLibrary.OpenLibraryBookDTO;
 import com.br.estante_virtual.dto.request.book.BookAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.book.BookDTORequest;
 import com.br.estante_virtual.entity.Book;
@@ -74,6 +75,47 @@ public class BookMapper {
         if (dtoAtualizar.getPublicationYear() != null) {
             book.setPublicationYear(dtoAtualizar.getPublicationYear());
         }
+    }
+
+    /**
+     * Converte o DTO externo da Open Library para o DTO interno de cadastro.
+     */
+    public BookDTORequest toDTORequest(OpenLibraryBookDTO item) {
+
+        String author = (item.authors() != null && !item.authors().isEmpty())
+                ? item.authors().get(0)
+                : "Autor Desconhecido";
+
+        String isbn = (item.isbnList() != null && !item.isbnList().isEmpty())
+                ? item.isbnList().get(0)
+                : "S/N-" + System.currentTimeMillis();
+
+        String coverUrl = (item.coverId() != null)
+                ? "https://covers.openlibrary.org/b/id/" + item.coverId() + "-L.jpg"
+                : "https://placehold.co/400x600?text=Capa+Indisponivel";
+
+        String publisher = (item.publishers() != null && !item.publishers().isEmpty())
+                ? item.publishers().get(0)
+                : "Editora Desconhecida";
+
+        Integer pages = (item.pageCount() != null) ? item.pageCount() : 0;
+
+        Integer year = (item.firstPublishYear() != null) ? item.firstPublishYear() : 2000;
+
+        String synopsis = (item.firstSentence() != null && !item.firstSentence().isEmpty())
+                ? item.firstSentence().get(0)
+                : "Sinopse não disponível na busca rápida. Edite este campo após salvar.";
+
+        return new BookDTORequest(
+                item.title(),
+                author,
+                isbn,
+                coverUrl,
+                synopsis,
+                pages,
+                publisher,
+                year
+        );
     }
 
 }

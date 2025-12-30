@@ -1,5 +1,6 @@
 package com.br.estante_virtual.service;
 
+import com.br.estante_virtual.client.OpenLibraryClient;
 import com.br.estante_virtual.dto.request.book.BookAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.book.BookDTORequest;
 import com.br.estante_virtual.dto.response.BookDTOResponse;
@@ -28,13 +29,17 @@ public class BookService {
 
     private final BookMapper bookMapper;
 
+    private final OpenLibraryClient openLibraryClient;
+
     @Autowired
     public BookService(
             BookRepository bookRepository,
-            BookMapper bookMapper
+            BookMapper bookMapper,
+            OpenLibraryClient openLibraryClient
     ) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
+        this.openLibraryClient = openLibraryClient;
     }
 
     /**
@@ -111,4 +116,28 @@ public class BookService {
         return bookRepository.buscarPorIdAtivo(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Livro não encontrado ou não existe na estante do Usuário."));
     }
+
+
+    /**
+     * Busca livros na Open Library filtrando por português e limita a 10 resultados.
+     * Retorna os dados já convertidos para o padrão interno (DTO), prontos para cadastro.
+     *
+     * @param query Título, Autor ou ISBN.
+     * @return Lista de livros formatados ou lista vazia se nada for encontrado.
+     */
+    public List<BookDTORequest> buscarLivrosNaAPIExterna(String query) {
+        String queryFormatada = query.trim() + " language:por";
+
+        var response = openLibraryClient.buscarLivros(queryFormatada);
+
+        if (response == null || response.docs() == null) {
+            return List.of();
+        }
+
+        return response.docs().stream()
+                .limit(10)
+                .map(bookMapper::toDTORequest)
+                .toList();
+    }
+
 }
