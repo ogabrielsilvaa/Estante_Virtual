@@ -94,7 +94,7 @@ public class UserBookController {
      * @param atualizarDTORequest DTO com os campos a serem alterados.
      * @return O registro atualizado.
      */
-    @PatchMapping("/atualizar/{bookId}")
+    @PatchMapping("/atualizarDados/{bookId}")
     @Operation(summary = "Atualizar dados sobre a leitura.", description = "Atualiza status, páginas lidas, nota, etc. Envie apenas os campos que deseja alterar.")
     public ResponseEntity<UserBookDTOResponse> atualizarLeitura(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

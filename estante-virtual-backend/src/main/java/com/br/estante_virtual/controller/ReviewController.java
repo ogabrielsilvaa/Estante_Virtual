@@ -38,8 +38,8 @@ public class ReviewController {
      * Lista todos as reviews com base no status desejado.
      * @return Uma lista de reviews do usuário.
      */
-    @GetMapping("/listarReviewsPublicadas")
-    @Operation(summary = "Listar reviews publicadas.", description = "Endpoint para listar reviews publicadas do usuário logado.")
+    @GetMapping("/listarReviews")
+    @Operation(summary = "Listar reviews.", description = "Endpoint para listar reviews do usuário logado, filtrando por status.")
     public ResponseEntity<Page<ReviewDTOResponse>> listarReviewsPublicadas(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(defaultValue = "PUBLICADO") ReviewStatus status,

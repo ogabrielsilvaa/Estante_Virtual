@@ -3,9 +3,6 @@ package com.br.estante_virtual.controller;
 import com.br.estante_virtual.dto.request.book.BookAtualizarDTORequest;
 import com.br.estante_virtual.dto.request.book.BookDTORequest;
 import com.br.estante_virtual.dto.response.BookDTOResponse;
-import com.br.estante_virtual.dto.response.UserBookDTOResponse;
-import com.br.estante_virtual.enums.BookReadingStatus;
-import com.br.estante_virtual.security.UserDetailsImpl;
 import com.br.estante_virtual.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

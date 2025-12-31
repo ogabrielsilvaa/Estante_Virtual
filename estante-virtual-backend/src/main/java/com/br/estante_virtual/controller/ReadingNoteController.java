@@ -40,8 +40,8 @@ public class ReadingNoteController {
      * @param pageable
      * @return lista de notas ativas com paginação.
      */
-    @GetMapping("/listarNotasAtivas")
-    @Operation(summary = "Listar notas ativas.", description = "Endpoint para listar notas ativas do usuário logado.")
+    @GetMapping("/listarNotas")
+    @Operation(summary = "Listar notas.", description = "Endpoint para listar notas do usuário logado, filtrando por status.")
     public ResponseEntity<Page<ReadingNoteDTOResponse>> listarNotasAtivas(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(defaultValue = "ATIVO") ReadingNoteStatus status,
