@@ -1,7 +1,7 @@
 export enum BookReadingStatus {
-  QUERO_LER = 0,
-  LENDO = 1,
-  LIDO = 2,
-  PENDENTE = 3,
-  ABANDONEI = 4,
+  QUERO_LER = 'QUERO_LER',
+  LENDO = 'LENDO',
+  LIDO = 'LIDO',
+  PENDENTE = 'PENDENTE',
+  ABANDONEI = 'ABANDONEI',
 }

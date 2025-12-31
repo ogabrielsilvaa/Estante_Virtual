@@ -1,7 +1,7 @@
 export enum RatingLevel {
-  FRACO = 1,
-  RAZOAVEL = 2,
-  BOM = 3,
-  MUITO_BOM = 4,
-  EXCELENTE = 5,
+  FRACO = 'FRACO',
+  RAZOAVEL = 'RAZOAVEL',
+  BOM = 'BOM',
+  MUITO_BOM = 'MUITO_BOM',
+  EXCELENTE = 'EXCELENTE',
 }

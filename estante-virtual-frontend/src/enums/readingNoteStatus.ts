@@ -1,4 +1,4 @@
 export enum ReadingNoteStatus {
-  ATIVO = 1,
-  INATIVO = 2,
+  ATIVO = 'ATIVO',
+  INATIVO = 'INATIVO',
 }
