@@ -41,7 +41,7 @@ public class BookController {
     @GetMapping("/listarCatalogo")
     @Operation(summary = "Listar catálogo.", description = "Lista todos os livros ativos disponíveis no sistema.")
     public ResponseEntity<Page<BookDTOResponse>> listarCatalogo(
-            @PageableDefault(size = 10, sort = "tittle")Pageable pageable
+            @PageableDefault(size = 10, sort = "title")Pageable pageable
             ) {
         return ResponseEntity.ok(bookService.listarLivrosAtivos(pageable));
     }
