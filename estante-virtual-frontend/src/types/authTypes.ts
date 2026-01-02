@@ -25,3 +25,11 @@ export interface RecoveryJwtToken {
   token: string;
   user: UserLoginResponse;
 }
+
+export interface AuthContextType {
+  signed: boolean;
+  user: UserLoginResponse | null;
+  loading: boolean;
+  signIn: (token: string, userData: UserLoginResponse) => void;
+  signOut: () => void;
+}
