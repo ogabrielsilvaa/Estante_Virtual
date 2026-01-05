@@ -1,16 +1,11 @@
 import { AuthProvider } from './context/authContext'
-import { MyShelf } from './pages/myShelf/myShelf';
+import { Login } from './pages/login';
 
 function App() {
 
   return (
     <AuthProvider>
-      <MyShelf />
-
-      <div>
-        <h1>Testando meu app!</h1>
-      </div>
-
+      <Login />
     </AuthProvider>
   );
 }
