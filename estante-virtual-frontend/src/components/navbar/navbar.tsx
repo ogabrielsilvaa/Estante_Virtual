@@ -2,10 +2,10 @@ import { FaSearch } from 'react-icons/fa';
 
 export function Navbar() {
   return (
-    <nav className="bg-dark py-4 shadow-md">
-      <div className="max-w-[1200px] mx-auto px-8 h-24 flex justify-between items-center">
+    <nav className="bg-dark py-4 shadow-md w-full">
+      <div className="w-full px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0">
 
-        <div>
+        <div className="text-center md:text-left">
           <a className="text-primary font-playfair font-medium text-[44px] block leading-tight cursor-pointer">
             Estante Virtual
           </a>
@@ -15,7 +15,7 @@ export function Navbar() {
           </h2>
         </div>
 
-        <form className="flex">
+        <form className="flex w-full md:w-auto justify-center">
           <div className="relative">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1F] z-10 pointer-events-none" />
             
