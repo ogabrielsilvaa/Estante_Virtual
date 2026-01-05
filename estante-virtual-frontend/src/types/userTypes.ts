@@ -1,11 +1,5 @@
 import type { UserStatus } from "../enums/userStatus";
 
-export interface UserRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export interface UserAtualizarRequest {
   name: string;
 }

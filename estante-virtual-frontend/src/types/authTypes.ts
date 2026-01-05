@@ -1,5 +1,11 @@
 import type { UserResponse } from "./userTypes";
 
+export interface UserRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface UserLoginRequest {
   email: string;
   password: string;
@@ -26,10 +32,15 @@ export interface RecoveryJwtToken {
   user: UserLoginResponse;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 export interface AuthContextType {
   signed: boolean;
   user: UserLoginResponse | null;
   loading: boolean;
-  signIn: (token: string, userData: UserLoginResponse) => void;
+  signIn: (credentials: LoginCredentials) => Promise<void>;
   signOut: () => void;
 }

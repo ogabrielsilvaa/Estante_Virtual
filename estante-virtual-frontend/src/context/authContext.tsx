@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { type AuthContextType, type UserLoginResponse } from "../types/authTypes";
+import { type AuthContextType, type LoginCredentials, type UserLoginRequest, type UserLoginResponse } from "../types/authTypes";
 import ApiManager from "../services/apiManager";
+import AuthService from "../services/authService";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -25,21 +26,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loadStorageData();
   }, []);
 
-  function signIn(token: string, userData: UserLoginResponse) {
-    setUser(userData);
+  async function signIn(credentials: UserLoginRequest) {
+    try {
+      const data = await AuthService.login(credentials);
+      const { token } = data;
 
-    localStorage.setItem('user_token', token);
-    localStorage.setItem('user_data', JSON.stringify(userData));
+      localStorage.setItem('user_token', token);
+      localStorage.setItem('user_data', JSON.stringify(data));
 
-    ApiManager.defaults.headers.Authorization = `Bearer ${token}`;
-  }
+      ApiManager.defaults.headers.Authorization = `Bearer ${token}`;
+
+      setUser(data as unknown as UserLoginResponse);
+      } catch (error) {
+        throw error;
+      }
+    }
 
   function signOut() {
-    localStorage.removeItem('user_token');
-    localStorage.removeItem('user_data');
-    setUser(null);
+    AuthService.logout();
 
-    window.location.href = '/login';
+    setUser(null);
+    delete ApiManager.defaults.headers.common['Authorization'];
   }
 
   return (
