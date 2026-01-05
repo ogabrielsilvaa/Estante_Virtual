@@ -20,7 +20,7 @@ export function Navbar() {
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1F] z-10 pointer-events-none" />
             
             <input 
-              className="w-[180px] h-[50px] bg-primary text-white rounded-md pl-12 placeholder-[#1A1A1F] outline-none focus:bg-[#4a4a4a] transition-colors duration-300"
+              className="w-[180px] h-[50px] bg-primary hover:bg-amber-300 text-white rounded-md pl-12 placeholder-[#1A1A1F] outline-none focus:bg-[#4a4a4a] transition-colors duration-300"
               type="search" 
               placeholder="Search Books" 
               aria-label="Search" 
