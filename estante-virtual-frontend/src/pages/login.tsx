@@ -21,7 +21,7 @@ export function Login() {
 
     try {
       await signIn({ email, password });
-      navigate("/estante");
+      navigate("/myShelf");
     } catch (error) {
       console.error(error);
       alert("Erro ao entrar. Verifique seu e-mail e senha.");
