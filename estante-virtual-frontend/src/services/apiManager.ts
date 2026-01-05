@@ -27,12 +27,20 @@ ApiManager.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && (error.response.status === 403 || error.response.status === 401)) {
-      console.error("Sessão expirada ou inváldia. Deslogando...");
+      const requestUrl = error.config.url;
 
-      localStorage.removeItem('user_token');
-      localStorage.removeItem('user_data');
+      const isAuthRequest = requestUrl.includes('/login') || requestUrl.includes('/cadastrar');
 
-      window.location.href = '/login';
+      if (!isAuthRequest) {
+        console.error("Sessão expirada ou inválida. Deslogando...");
+
+        localStorage.removeItem('user_token');
+        localStorage.removeItem('user_data');
+
+        if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+        }
+      }
     }
 
     return Promise.reject(error);
