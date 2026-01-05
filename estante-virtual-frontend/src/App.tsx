@@ -3,6 +3,7 @@ import { AuthProvider } from './context/authContext'
 import { Login } from './pages/login';
 import { Register } from './pages/register';
 import { MyShelf } from './pages/myShelf';
+import { BookDetails } from './pages/bookDetails';
 
 function App() {
 
@@ -15,10 +16,11 @@ function App() {
           <Route path='/register' element={<Register />} />
 
           <Route path='/myShelf' element={<MyShelf />} />
+          <Route path='/bookDetails' element={<BookDetails />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;

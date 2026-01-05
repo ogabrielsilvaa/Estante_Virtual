@@ -24,6 +24,6 @@ export interface UserBookResponse {
   pagesRead: number;
   startDate: string;
   finishDate: string;
-  favorite: string;
+  favorite: string | boolean;
   statusActive: string;
 }

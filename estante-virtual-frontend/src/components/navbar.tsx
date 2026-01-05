@@ -42,7 +42,7 @@ export function Navbar({ onSearch }: NavbarProps) {
             <input 
               className="w-[180px] h-[50px] bg-primary hover:bg-amber-300 text-white rounded-md pl-12 placeholder-[#1A1A1F] outline-none focus:bg-[#4a4a4a] transition-colors duration-300"
               type="search" 
-              placeholder="Search Books" 
+              placeholder="Procurar Livros" 
               aria-label="Search" 
               onChange={handleInputChange}
             />
