@@ -1,6 +1,26 @@
+import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
-export function Navbar() {
+interface NavbarProps {
+  onSearch: (query: string) => void;
+}
+
+export function Navbar({ onSearch }: NavbarProps) {
+  const [typingTimeout, setTypingTimeout] = useState<any>(null);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const text = e.target.value;
+
+    if (typingTimeout) clearTimeout(typingTimeout);
+
+    const newTimeout = setTimeout(() => {
+      onSearch(text);
+    }, 800);
+
+    setTypingTimeout(newTimeout);
+  }
+
+
   return (
     <nav className="bg-dark py-4 shadow-md w-full">
       <div className="w-full px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0">
@@ -24,6 +44,7 @@ export function Navbar() {
               type="search" 
               placeholder="Search Books" 
               aria-label="Search" 
+              onChange={handleInputChange}
             />
           </div>
         </form>
