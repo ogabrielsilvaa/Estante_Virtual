@@ -68,15 +68,27 @@ public class UserBookService {
      */
     @Transactional
     public UserBookDTOResponse adicionarLivroNaEstante(Integer userId, UserBookDTORequest dtoRequest) {
-        if(userBookRepository.verificarLivroNaEstante(userId, dtoRequest.getBookId())) {
-            throw new IllegalArgumentException("Este livro já está na sua estante.");
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        Book book = null;
+
+        if (dtoRequest.getBookId() != null) {
+            book = bookRepository.findById(dtoRequest.getBookId()).orElse(null);
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+        if (book == null && dtoRequest.getIsbn() != null) {
+            book = bookRepository.findByIsbn(dtoRequest.getIsbn()).orElse(null);
+        }
 
-        Book book = bookRepository.buscarPorIdAtivo(dtoRequest.getBookId())
-                .orElseThrow(() -> new EntityNotFoundException("Livro não encontrado."));
+        if (book == null) {
+            Book newBook = userBookMapper.userBookDTOToBookEntity(dtoRequest);
+            book = bookRepository.save(newBook);
+        }
+
+        if(userBookRepository.verificarLivroNaEstante(userId, book.getId())) {
+            throw new IllegalArgumentException("Este livro já está na sua estante.");
+        }
 
         UserBook novoRegistro = userBookMapper.toEntity(user, book, dtoRequest);
 

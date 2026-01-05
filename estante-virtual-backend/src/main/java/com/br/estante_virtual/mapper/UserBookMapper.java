@@ -62,4 +62,28 @@ public class UserBookMapper {
         }
     }
 
+    /**
+     * Converte o request complexo do UserBook (que tem dados do livro e do usuário)
+     * em uma entidade Book limpa.
+     *
+     * @param dtoRequest O DTO contendo dados misturados.
+     * @return A entidade Book pronta para salvar.
+     */
+    public Book userBookDTOToBookEntity(UserBookDTORequest dtoRequest) {
+        Book newBook = new Book();
+
+        newBook.setTitle(dtoRequest.getTitle());
+        newBook.setAuthor(dtoRequest.getAuthor());
+        newBook.setIsbn(dtoRequest.getIsbn());
+        newBook.setCoverUrl(dtoRequest.getCoverUrl());
+        newBook.setSynopsis(dtoRequest.getSynopsis());
+        newBook.setPageCount(dtoRequest.getPageCount());
+        newBook.setPublisher(dtoRequest.getPublisher());
+        newBook.setPublicationYear(dtoRequest.getPublicationYear());
+
+        newBook.setStatusActive(true);
+
+        return newBook;
+    }
+
 }

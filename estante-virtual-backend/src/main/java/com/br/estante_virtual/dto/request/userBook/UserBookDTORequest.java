@@ -2,6 +2,7 @@ package com.br.estante_virtual.dto.request.userBook;
 
 import com.br.estante_virtual.enums.BookReadingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -9,8 +10,18 @@ import java.time.LocalDate;
 
 public class UserBookDTORequest {
 
-    @NotNull(message = "O ID do livro é obrigatório.")
     private Integer bookId;
+
+    @NotBlank(message = "O ISBN é obrigatório para cadastrar novos livros.")
+    private String isbn;
+
+    private String title;
+    private String author;
+    private String coverUrl;
+    private String publisher;
+    private Integer publicationYear;
+    private Integer pageCount;
+    private String synopsis;
 
     @NotNull(message = "O status da leitura é obrigatório (ex: QUERO_LER, LENDO).")
     @Schema(type = "integer", example = "0", description = "0: Quero Ler, 1: Lendo, 2: Lido, 3: Pendente, 4: Abandonei")
@@ -26,13 +37,85 @@ public class UserBookDTORequest {
     public UserBookDTORequest() {
     }
 
-    public UserBookDTORequest(Integer bookId, BookReadingStatus readingStatus, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
+    public UserBookDTORequest(Integer bookId, String isbn, String title, String author, String coverUrl, String publisher, Integer publicationYear, Integer pageCount, String synopsis, BookReadingStatus readingStatus, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
         this.bookId = bookId;
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.coverUrl = coverUrl;
+        this.publisher = publisher;
+        this.publicationYear = publicationYear;
+        this.pageCount = pageCount;
+        this.synopsis = synopsis;
         this.readingStatus = readingStatus;
         this.pagesRead = pagesRead;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.favorite = favorite;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public Integer getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(Integer publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public Integer getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(Integer pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public Integer getBookId() {

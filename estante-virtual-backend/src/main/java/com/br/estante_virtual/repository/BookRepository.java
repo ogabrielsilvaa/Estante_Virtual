@@ -56,4 +56,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
                 OR LOWER(b.author) LIKE LOWER(CONCAT('%', :termo, '%')))
            """)
     Page<Book> pesquisarPorTituloOuAutor(@Param("termo") String termo, Pageable pageable);
+
+    Optional<Book> findByIsbn(String isbn);
 }
