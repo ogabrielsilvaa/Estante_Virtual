@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FormInput } from "../components/formInput/formInput";
+import { FormInput } from "../components/formInput";
 import { useAuth } from "../context/authContext";
 import { useState } from "react";
 
