@@ -26,19 +26,29 @@ ApiManager.interceptors.request.use(
 ApiManager.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && (error.response.status === 403 || error.response.status === 401)) {
+    if (error.response) {
+      const status = error.response.status;
       const requestUrl = error.config.url;
+
+      const errorMessage = error.response.data?.message || "";
 
       const isAuthRequest = requestUrl.includes('/login') || requestUrl.includes('/cadastrar');
 
+      const isBusinessError =
+        errorMessage.includes("existe") ||
+        errorMessage.includes("inválido") ||
+        errorMessage.includes("obrigatório");
+
       if (!isAuthRequest) {
-        console.error("Sessão expirada ou inválida. Deslogando...");
+        if (status === 401 || (status === 403 && !isBusinessError)) {
+          console.warn("Sessão expirada ou acesso negado crítico. Deslogando... ", status);
 
-        localStorage.removeItem('user_token');
-        localStorage.removeItem('user_data');
+          localStorage.removeItem('user_token');
+          localStorage.removeItem('user_data');
 
-        if (window.location.pathname !== '/login') {
-            window.location.href = '/login';
+          if (window.location.pathname !== '/login') {
+              window.location.href = '/login';
+          }
         }
       }
     }

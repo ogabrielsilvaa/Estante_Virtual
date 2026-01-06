@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { type AuthContextType, type LoginCredentials, type UserLoginRequest, type UserLoginResponse } from "../types/authTypes";
+import type { AuthContextType, UserLoginRequest, UserLoginResponse } from "../types/authTypes";
 import ApiManager from "../services/apiManager";
 import AuthService from "../services/authService";
 
