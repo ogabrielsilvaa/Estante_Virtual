@@ -130,9 +130,9 @@ export function MyShelf() {
 
         {!loading && !hasSearched && (
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-             {myBooks.map((userBook) => (
+             {myBooks.map((userBook, index) => (
                <div 
-                 key={userBook.id}
+                 key={userBook.id || index}
                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer flex flex-col h-full relative"
                >
                  {(userBook.favorite === 'S' || userBook.favorite === true) && (
@@ -140,7 +140,21 @@ export function MyShelf() {
                         <FaHeart />
                     </div>
                  )}
-                 <div className="aspect-[2/3] overflow-hidden bg-gray-200 relative">
+                 <div
+                  className="aspect-[2/3] overflow-hidden bg-gray-200 relative"
+                  onClick={() => navigate('/bookDetails', { 
+                    state: {
+                      ...userBook.book,
+                      readingStatus: userBook.readingStatus,
+                      pagesRead: userBook.pagesRead,
+                      favorite: userBook.favorite,
+                      startDate: userBook.startDate,
+                      finishDate: userBook.finishDate,
+                      
+                      userBookId: userBook.id
+                    }
+                  })}
+                >
                     <img 
                         src={getCover(userBook.book.coverUrl)} 
                         alt={userBook.book.title} 
@@ -163,7 +177,7 @@ export function MyShelf() {
                    {userBook.readingStatus === 'LENDO' && userBook.book.pageCount > 0 && (
                        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-3">
                            <div 
-                               className="bg-blue-600 h-1.5 rounded-full" 
+                               className="bg-primary h-1.5 rounded-full" 
                                style={{ width: `${(userBook.pagesRead / userBook.book.pageCount) * 100}%` }}
                            ></div>
                        </div>
