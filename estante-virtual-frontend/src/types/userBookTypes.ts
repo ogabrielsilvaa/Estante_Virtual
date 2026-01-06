@@ -27,3 +27,12 @@ export interface UserBookResponse {
   favorite: string | boolean;
   statusActive: string;
 }
+
+export interface BookDetailsState extends BookResponse {
+  userBookId?: number;
+  readingStatus?: BookReadingStatus;
+  pagesRead?: number;
+  startDate?: string;
+  finishDate?: string;
+  favorite?: string | boolean;
+}

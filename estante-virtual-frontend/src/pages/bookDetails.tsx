@@ -10,24 +10,26 @@ import {
   FaRegHeart,
 } from "react-icons/fa";
 import UserBookService from "../services/userBookService";
-import type { BookResponse } from "../types/bookTypes";
 import { BookReadingStatus } from "../enums/bookReadingStatus";
+import type { BookDetailsState } from "../types/userBookTypes";
 
 export function BookDetails() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const book = location.state as BookResponse;
+  const book = location.state as BookDetailsState;
 
   const [loading, setLoading] = useState(false);
 
   const [status, setStatus] = useState<BookReadingStatus>(
-    BookReadingStatus.QUERO_LER
+     book.readingStatus || BookReadingStatus.QUERO_LER
   );
-  const [pagesRead, setPagesRead] = useState(0);
-  const [startDate, setStartDate] = useState("");
-  const [finishDate, setFinishDate] = useState("");
-  const [favorite, setFavorite] = useState(false);
+  const [pagesRead, setPagesRead] = useState(book.pagesRead || 0);
+  const [startDate, setStartDate] = useState(book.startDate || "");
+  const [finishDate, setFinishDate] = useState(book.finishDate || "");
+  const [favorite, setFavorite] = useState(
+      book.favorite === true || book.favorite === 'S'
+  );
 
   if (!book) {
     return (
@@ -70,9 +72,14 @@ export function BookDetails() {
         favorite: favorite,
       };
 
-      await UserBookService.addInShelf(payload);
-
-      alert("Livro cadastrado na sua estante com sucesso!");
+      if (book.userBookId) {
+        await UserBookService.updateMyBook(payload, book.userBookId);
+        alert("Dados do livro atualizados com sucesso!");
+      } else {
+        await UserBookService.addInShelf(payload);
+        alert("Livro cadastrado na sua estante com sucesso!");
+      }
+      
       navigate("/myShelf");
     } catch (error: any) {
       console.error("Erro ao salvar: ", error);
