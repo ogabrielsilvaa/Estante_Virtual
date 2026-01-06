@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public class UserBookAtualizarDTORequest {
 
+    private BookReadingStatus readingStatus;
     @PositiveOrZero(message = "O número de páginas lidas não pode ser negativo.")
     private Integer pagesRead = 0;
     private LocalDate startDate;
@@ -17,11 +18,20 @@ public class UserBookAtualizarDTORequest {
     public UserBookAtualizarDTORequest() {
     }
 
-    public UserBookAtualizarDTORequest(Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
+    public UserBookAtualizarDTORequest(BookReadingStatus readingStatus, Integer pagesRead, LocalDate startDate, LocalDate finishDate, Boolean favorite) {
+        this.readingStatus = readingStatus;
         this.pagesRead = pagesRead;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.favorite = favorite;
+    }
+
+    public BookReadingStatus getReadingStatus() {
+        return readingStatus;
+    }
+
+    public void setReadingStatus(BookReadingStatus readingStatus) {
+        this.readingStatus = readingStatus;
     }
 
     public Integer getPagesRead() {

@@ -45,6 +45,10 @@ public class UserBookMapper {
      * @param dtoAtualizar O DTO contendo os novos dados.
      */
     public void updateEntity(UserBook userBook, UserBookAtualizarDTORequest dtoAtualizar) {
+        if (dtoAtualizar.getReadingStatus() != null) {
+            userBook.setReadingStatus(dtoAtualizar.getReadingStatus());
+        }
+
         if (dtoAtualizar.getPagesRead() != null) {
             userBook.setPagesRead(dtoAtualizar.getPagesRead());
         }
