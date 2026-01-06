@@ -105,7 +105,7 @@ export function MyShelf() {
             {searchBooks.map((book, index) => (
               <div 
                 key={book.isbn || index} 
-                onClick={() => navigate('/book-details', { state: book })}
+                onClick={() => navigate('/bookDetails', { state: book })}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer flex flex-col h-full group"
               >
                 <div className="aspect-[2/3] overflow-hidden bg-gray-200 relative">
