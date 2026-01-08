@@ -4,6 +4,7 @@ import { Login } from './pages/login';
 import { Register } from './pages/register';
 import { MyShelf } from './pages/myShelf';
 import { BookDetails } from './pages/bookDetails';
+import { Reviews } from './pages/reviews';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
 
           <Route path='/myShelf' element={<MyShelf />} />
           <Route path='/bookDetails' element={<BookDetails />} />
+          <Route path='/reviews' element={<Reviews />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

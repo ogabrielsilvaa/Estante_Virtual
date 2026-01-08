@@ -32,4 +32,5 @@ export interface ReviewResponse {
   ratingImmersion: RatingLevel;
   text: string;
   status: ReviewStatus;
+  createdAt: string;
 }

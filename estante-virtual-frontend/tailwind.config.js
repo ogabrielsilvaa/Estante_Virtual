@@ -9,6 +9,7 @@ export default {
       colors: {
         primary: '#C9A961',
         dark: '#1A1A1F',
+        background: '#0F0F12'
       },
       fontFamily: {
         playfair: ['"Playfair Display"', 'serif'],

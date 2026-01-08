@@ -4,6 +4,21 @@ import type { ReviewAtualizarRequest, ReviewRequest, ReviewResponse } from "../t
 import ApiManager from "./apiManager";
 
 const ReviewService = {
+  viewFeed: async (
+    page: number=0,
+    size: number=10
+  ): Promise<Page<ReviewResponse>> => {
+    const response = await ApiManager.get<Page<ReviewResponse>>(`/reviews/feed`, {
+      params: {
+        page: page,
+        size: size,
+        sort: 'createdAt,DESC',
+      }
+    })
+
+    return response.data;
+  },
+
   viewReviews: async (
     status?: ReviewStatus,
     page: number = 0,
