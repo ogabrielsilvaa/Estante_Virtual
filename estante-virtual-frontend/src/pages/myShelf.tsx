@@ -86,7 +86,7 @@ export function MyShelf() {
               pagesRead={userBook.pagesRead}
               pageCount={userBook.book.pageCount}
               isFavorite={userBook.favorite === "S" || userBook.favorite === true}
-              onClick={() => navigate("/bookDetails", { state: {...userBook.book, ...userBook } })}
+              onClick={() => navigate("/bookDetails", { state: {...userBook.book, ...userBook, id: userBook.book.id, userBookId: userBook.id } })}
               onDelete={(e) => handleDelete(e, userBook.id)}
             />
           ))}

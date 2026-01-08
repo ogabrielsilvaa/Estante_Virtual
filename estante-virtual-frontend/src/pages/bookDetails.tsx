@@ -99,7 +99,7 @@ export function BookDetails() {
 
   return (
     <div className="min-h-screen bg-dark pb-10">
-      <Navbar onSearch={() => {}} />
+      <Navbar />
 
       <div className="max-w-[1000px] mx-auto px-6 mt-10">
         <button
