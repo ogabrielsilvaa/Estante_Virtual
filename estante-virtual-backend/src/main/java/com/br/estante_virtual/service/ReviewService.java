@@ -39,6 +39,11 @@ public class ReviewService {
         this.reviewMapper = reviewMapper;
     }
 
+    public Page<ReviewDTOResponse> listarTodasReviewsPorStatus(ReviewStatus status, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAllByStatus(status, pageable);
+        return reviews.map(ReviewDTOResponse::new);
+    }
+
     /**
      * Busca as reviews que estão com status desejado.
      * @return lista de reviews publicadas.

@@ -66,4 +66,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
      */
     @Query("SELECT r FROM Review r WHERE r.id = :id AND r.userBook.user.id = :userId")
     Optional<Review> listarPorIdEUsuario(Integer id, Integer userId);
+
+    Page<Review> findAllByStatus(ReviewStatus status, Pageable pageable);
 }

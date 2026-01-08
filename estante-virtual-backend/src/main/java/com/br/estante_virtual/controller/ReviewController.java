@@ -35,6 +35,22 @@ public class ReviewController {
     }
 
     /**
+     * Endpoint para listar todas reviews existentes no banco de dados.
+     * De forma que os usuários possam ver todas as reviews de livros.
+     * @param pageable Lista paginada das reviews.
+     * @return Lista das reviews com status 'PUBLICADA' existentes no banco de dados.
+     */
+    @GetMapping("/feed")
+    @Operation(summary = "Listar reviews globais.", description = "Lista reviews de todos os usuários, filtrando por status.")
+    public ResponseEntity<Page<ReviewDTOResponse>> listarReviewsGlobais(
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                reviewService.listarTodasReviewsPorStatus(ReviewStatus.PUBLICADO, pageable)
+        );
+    }
+
+    /**
      * Lista todos as reviews com base no status desejado.
      * @return Uma lista de reviews do usuário.
      */
