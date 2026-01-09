@@ -34,3 +34,14 @@ export interface ReviewResponse {
   status: ReviewStatus;
   createdAt: string;
 }
+
+export interface ReviewDetailsState extends ReviewResponse {
+  userBookId?: number;
+  ratingPlot: RatingLevel;
+  ratingCharacters: RatingLevel;
+  ratingWriting: RatingLevel;
+  ratingImmersion: RatingLevel;
+  text: string;
+  status: ReviewStatus;
+  createdAt: string;
+}

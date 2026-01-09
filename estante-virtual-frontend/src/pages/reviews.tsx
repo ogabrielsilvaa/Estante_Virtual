@@ -100,7 +100,7 @@ export function Reviews() {
                 ratingImmersion={review.ratingImmersion}
                 text={review.text}
                 createdAt={review.createdAt}
-                onClick={() => navigate("/bookDetails", { state: { ...review.book, ...review } })}
+                onClick={() => navigate("/reviewDetails", { state: { ...review } })}
               />
             ))
           ) : (

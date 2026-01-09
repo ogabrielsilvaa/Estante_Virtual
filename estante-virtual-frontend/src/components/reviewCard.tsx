@@ -108,7 +108,7 @@ export function ReviewCard({
         </div>
 
         <div className="flex-1 mb-4">
-          <p className="text-gray-300 text-sm leading-relaxed line-clamp-4 md:line-clamp-none">
+          <p className="text-gray-300 text-sm leading-relaxed line-clamp-4">
             {text ? `"${text}"` : <span className="italic text-gray-600">Sem comentário escrito.</span>}
           </p>
         </div>
